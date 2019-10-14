@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { majorScaleChords, buildChords } from './chords'
 import styles from './app.module.css'
 import Tone from 'tone'
-import SynthBox from './synth-box'
 import RhythmSection from './rhythm-section'
+import SynthBoxContainer from './synth-box-container'
 
 const AUDIO = document.createElement('audio')
 
@@ -203,6 +203,11 @@ const App = () => {
         rhythmHeaderText={rhythmHeaderText}
         rhythmButtonText={rhythmButtonText}
         handleClick={toggleRhythmInterface} />
+
+        <SynthBoxContainer 
+        synthChords={synthChords} 
+        handleSynthBoxClick={handleSynthBoxClick}
+        />
 
     </div>
   ) : null
