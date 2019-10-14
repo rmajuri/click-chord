@@ -1,0 +1,30 @@
+.rhythmTextGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    grid-auto-flow: column;
+    margin-bottom: 2rem;
+  }
+  
+  .rhythmTextColumn {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .rhythmHeader {
+    font-family: var(--header-font);
+    color: var(--black);
+    font-size: 2rem;
+  }
+  
+  .rhythmButton {
+    color: white;
+    background-color: var(--red);
+    font-family: var(--header-font);
+    padding: 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .rhythmButton:hover {
+      background-color: var(--black);
+  }
