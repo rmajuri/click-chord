@@ -4,6 +4,7 @@ import styles from './app.module.css'
 import Tone from 'tone'
 import RhythmSection from './rhythm-section'
 import SynthBoxContainer from './synth-box-container'
+import KeyChanger from './key-changer'
 
 const AUDIO = document.createElement('audio')
 
@@ -99,23 +100,23 @@ const App = () => {
       majorScaleChords[currentKey][chord].start()
       setCurrentChord(chord)
       const chordPlaying = document.getElementById(chord)
-      chordPlaying.className = 'synthBoxPlaying'
+      chordPlaying.classList.add('synthBoxPlaying')
     }
 
     if (currentChord === chord) {
       majorScaleChords[currentKey][chord].stop()
       setCurrentChord('')
       const chordPlaying = document.getElementById(chord)
-      chordPlaying.className = 'synthBox'
+      chordPlaying.classList.remove('synthBoxPlaying')
     }
 
     if (currentChord && currentChord !== chord) {
       majorScaleChords[currentKey][currentChord].stop()
       const chordPlaying = document.getElementById(currentChord)
-      chordPlaying.className = 'synthBox'
+      chordPlaying.classList.remove('synthBoxPlaying')
       majorScaleChords[currentKey][chord].start()
       const newChord = document.getElementById(chord)
-      newChord.className = 'synthBoxPlaying'
+      newChord.classList.add('synthBoxPlaying')
       setCurrentChord(chord)
     }
   }
@@ -204,10 +205,15 @@ const App = () => {
         rhythmButtonText={rhythmButtonText}
         handleClick={toggleRhythmInterface} />
 
-        <SynthBoxContainer 
-        synthChords={synthChords} 
-        handleSynthBoxClick={handleSynthBoxClick}
+      <div className={styles.appContainer}>
+
+        <KeyChanger />
+
+        <SynthBoxContainer
+          synthChords={synthChords}
+          handleSynthBoxClick={handleSynthBoxClick}
         />
+      </div>
 
     </div>
   ) : null

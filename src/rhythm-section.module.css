@@ -14,17 +14,25 @@
   .rhythmHeader {
     font-family: var(--header-font);
     color: var(--black);
-    font-size: 2rem;
+    font-size: calc(1.5rem + 1vmin);
   }
   
   .rhythmButton {
     color: white;
-    background-color: var(--red);
+    border: 1px solid var(--black);
+    box-shadow: .25rem .25em .25rem var(--red), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--red),
+    .25rem .25rem .25rem white;
     font-family: var(--header-font);
-    padding: 0.5rem;
-    font-size: 1.5rem;
+    background-color: var(--black);
+    padding: calc(0.25rem + .25vmin);
+    font-size: calc(1.5rem + 1vmin);
   }
   
   .rhythmButton:hover {
-      background-color: var(--black);
+      background-color: var(--red);
+      cursor: pointer;
+  }
+
+  .rhythmButton:focus {
+    outline: none;
   }

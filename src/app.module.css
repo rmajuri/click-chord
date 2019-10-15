@@ -5,7 +5,7 @@
 .appHeader {
   display: flex;
   justify-content: center;
-  text-shadow: -3px 3px var(--red);
+  text-shadow: -3px 5px var(--red);
   font-size: calc(3rem + 2vmin);
   color: var(--black);
   font-family: var(--header-font);
@@ -13,6 +13,7 @@
 
 .appContainer {
   display: grid;
-  grid-template-columns: 1fr 70% 1fr;
+  grid-template-areas: "scale synth texture";
+  grid-template-columns: 1fr 60% 1fr;
   grid-gap: 1.5rem;
 }

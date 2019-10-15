@@ -1,0 +1,24 @@
+.currentKeyContainer {
+    grid-area: scale;
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: calc(2.5rem + 1vmin);
+}
+
+.currentKeyText {
+    font-family: var(--header-font);
+    color: var(--red);
+    font-size: calc(1.5rem + 1vmin);
+}
+
+.arrowIcon {
+ color: var(--black);
+}
+
+.arrowIcon:hover {
+    color: var(--red);
+}
