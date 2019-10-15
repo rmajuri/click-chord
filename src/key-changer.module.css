@@ -17,6 +17,7 @@
 
 .arrowIcon {
  color: var(--black);
+ cursor: pointer;
 }
 
 .arrowIcon:hover {
