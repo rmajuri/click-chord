@@ -1,68 +1,25 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Click-Chord
 
-## Available Scripts
+## What is Click-Chord?
 
-In the project directory, you can run:
+Click-Chord is an app that allows users to build synthesizer chord progressions by clicking boxes. Each box, when clicked, triggers a different chord within its respecive major scale. Users can build chord progressions in any key they like.
 
-### `npm start`
+In addition to building chord progressions, users can also build drum their own drum loops to accompany their compositions. Or, if they don't want to build drum loops, they can choose pre-built drum loops from the "rhythm player".
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## How can I run Click-Chord locally?
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+After cloning the Click-Chord repo, run `npm install` and then `npm start`. The app will be served up at http://localhost:8080/.
 
-### `npm test`
+## How was Click-Chord made?
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To build Click-Chord, I relied heavily on a library called [Tone.js](https://tonejs.github.io/). Tone.js allows you to write code that makes music in the browser. It's built on top of the [Web Audio API](https://webaudio.github.io/web-audio-api/), which I became really interested in exploring.
 
-### `npm run build`
+The Web Audio API offers you the ability to create [oscillator nodes](https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode) using vanilla JavaScript. Oscillator nodes literally oscillate, or vibrate, creating sound that in its raw form is honestly rather grating on the ears. When you're phone alerts you of a flash flood with a sudden, piercing noise - that's what an oscillator node sounds like.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You can adjust the tone of oscillator nodes by manipulating details about them like their gain, their frequency, the shape of their wave, and more. You can make some really cool sounds using pure JS.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Or you can use Tone.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Tone's library abstracts the granular audio-tweaking details away from you by giving you easy-to-use API's that start and stop synth sounds with some pretty cool textures. And, if you want to play a musical chord using JS, instead of having to specify the exact frequency of each oscillator node and starting and stopping them at the same time, you can use Tone's [polysnyth API](https://tonejs.github.io/docs/13.8.25/PolySynth), which exposes a function that allows you to tell it exactly which nodes to play at which octave (e.g., C4, E4, G4).
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This is the real magic going on behind Click-Chord.
