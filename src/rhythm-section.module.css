@@ -3,7 +3,7 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 1rem;
     grid-auto-flow: column;
-    margin-bottom: 2rem;
+    margin-bottom: 5rem;
   }
   
   .rhythmTextColumn {
