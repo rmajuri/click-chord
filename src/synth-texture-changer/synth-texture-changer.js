@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './texture-changer.module.css'
+import styles from './synth-texture-changer.module.css'
 
 const TextureChanger = ({ handleTextureClick }) => {
     return (

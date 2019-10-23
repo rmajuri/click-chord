@@ -1,5 +1,5 @@
 import React from 'react'
-import SynthBox from './synth-box'
+import SynthBox from '../synth-box/synth-box'
 import styles from './synth-box-container.module.css'
 
 const SynthBoxContainer = ({synthChords, handleSynthBoxClick}) => {
