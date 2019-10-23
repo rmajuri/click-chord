@@ -1,7 +1,7 @@
 import React from 'react'
-import styles from './rhythm-section.module.css'
+import styles from './rhythm-headings-section.module.css'
 
-const RhythmSection = ({ rhythmHeaderText, rhythmButtonText, handleClick }) => {
+const RhythmHeadingsSection = ({ rhythmHeaderText, rhythmButtonText, handleClick }) => {
     return (
         <div className={styles.rhythmTextGrid}>
             <div className={styles.rhythmTextColumn}>
@@ -18,4 +18,4 @@ const RhythmSection = ({ rhythmHeaderText, rhythmButtonText, handleClick }) => {
     )
 }
 
-export default RhythmSection
+export default RhythmHeadingsSection

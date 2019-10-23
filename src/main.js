@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { majorScaleChords, buildChords } from './chords'
 import styles from './main.module.css'
 import Tone from 'tone'
-import RhythmSection from './rhythm-section'
+import RhythmSection from './rhythm-headings-section'
 import SynthBoxContainer from './synth-box-container'
 import KeyChanger from './key-changer'
 
