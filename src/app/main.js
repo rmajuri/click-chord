@@ -5,6 +5,7 @@ import Tone from 'tone'
 import RhythmSection from '../rhythm-headings-section/rhythm-headings-section'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
+import SynthTextureChanger from '../synth-texture-changer/synth-texture-changer'
 
 const AUDIO = document.createElement('audio')
 
@@ -213,6 +214,8 @@ const App = () => {
           synthChords={synthChords}
           handleSynthBoxClick={handleSynthBoxClick}
         />
+
+        <SynthTextureChanger handleTextureClick={changeTexture} />
       </div>
 
     </div>

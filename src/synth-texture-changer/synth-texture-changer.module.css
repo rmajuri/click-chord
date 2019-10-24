@@ -1,12 +1,32 @@
 .textureOptionContainer {
-
+    grid-area: texture;
+    display: grid;
+    padding: 1rem;
+    grid-template-rows: auto;
+    grid-gap: 1rem;
 }
 
 .textureOptionHeader {
-
+    margin-top: 0;
+    text-align: center;
+    font-family: var(--header-font);
+    color: var(--black);
+    font-size: calc(1rem + 1vmin);
 }
 
 .textureOption {
-    
+    background-color: var(--black);
+    font-family: var(--secondary-font);
+    color: white;
+    padding: .25rem;
+    font-size: calc(1rem + 1vmin);
+    border: 1px solid var(--black);
+    box-shadow: .25rem .25em .25rem var(--red), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--red),
+    .25rem .25rem .25rem white;
+    cursor: pointer;
 }
 
+.textureOption:hover {
+    background-color: var(--red);
+    cursor: pointer;
+}
