@@ -1,11 +1,19 @@
 import React from 'react'
-import { Container } from '@material-ui/core'
+import { ArrowBack, ArrowForward, PlayArrow, Pause } from '@material-ui/icons'
 import styles from './rhythm-player.module.css'
 
-const RhythmPlayer = () => {
+const RhythmPlayer = ({ rhythmPlaying, back, start, pause, forward }) => {
+
+    const trackPlayOption = rhythmPlaying ? <Pause onClick={pause} fontSize={'large'} /> : <PlayArrow onClick={start} fontSize={'large'} /> 
 
     return (
-        <Container />
+        <div className={styles.container}>
+            <div className={styles.controls}>
+                <ArrowBack onClick={back} fontSize={'large'} />
+                {trackPlayOption}
+                <ArrowForward onClick={forward} fontSize={'large'} />
+            </div>
+        </div>
     )
 }
 

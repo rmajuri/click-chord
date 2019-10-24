@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { majorScaleChords, buildChords } from '../chords/chords'
 import styles from './main.module.css'
 import Tone from 'tone'
-import RhythmSection from '../rhythm-headings-section/rhythm-headings-section'
+import RhythmHeadingsSection from '../rhythm-headings-section/rhythm-headings-section'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import SynthTextureChanger from '../synth-texture-changer/synth-texture-changer'
+import RhythmPlayer from '../rhythm-player/rhythm-player'
 
 const AUDIO = document.createElement('audio')
 
@@ -40,7 +41,7 @@ const App = () => {
     }
   }
 
-  const startAudio = () => {
+  const start = () => {
     if (currentRhythm && !rhythmPlaying) {
       resume()
     } else if (!currentRhythm.length) {
@@ -201,12 +202,19 @@ const App = () => {
         <h1 className={styles.appHeader}>CLICK-CHORD</h1>
       </header>
 
-      <RhythmSection
+      <RhythmHeadingsSection
         rhythmHeaderText={rhythmHeaderText}
         rhythmButtonText={rhythmButtonText}
         handleClick={toggleRhythmInterface} />
 
-      <div className={styles.appContainer}>
+      <RhythmPlayer
+          rhythmPlaying={rhythmPlaying}
+          pause={pause}
+          start={start}
+          back={back}
+          forward={forward} />
+
+      <div className={styles.appContainerCenter}>
 
         <KeyChanger />
 

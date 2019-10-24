@@ -2,6 +2,7 @@
     grid-area: texture;
     display: grid;
     padding: 1rem;
+    padding-right: 2rem;
     grid-template-rows: auto;
     grid-gap: 1rem;
 }
@@ -11,7 +12,7 @@
     text-align: center;
     font-family: var(--header-font);
     color: var(--black);
-    font-size: calc(1rem + 1vmin);
+    font-size: calc(1.5rem + 1vmin);
 }
 
 .textureOption {

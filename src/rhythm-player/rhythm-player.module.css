@@ -1,0 +1,11 @@
+.controls {
+    
+}
+
+.container {
+    width: 60%;
+    margin: 0 auto;
+    height: 4rem;
+    background-color: var(--red);
+    margin-bottom: calc(2rem + 1vmin);
+}

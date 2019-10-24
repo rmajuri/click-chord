@@ -11,9 +11,9 @@
   font-family: var(--header-font);
 }
 
-.appContainer {
+.appContainerCenter {
   display: grid;
   grid-template-areas: "scale synth texture";
-  grid-template-columns: 1fr 60% 1fr;
+  grid-template-columns: 15% 60% 1fr;
   grid-gap: 1.5rem;
 }
