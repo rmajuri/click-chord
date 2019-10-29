@@ -5,20 +5,13 @@ import Tone from 'tone'
 import RhythmHeadingsSection from '../rhythm-headings-section/rhythm-headings-section'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
-import SynthTextureChanger from '../synth-texture-changer/synth-texture-changer'
 import RhythmPlayer from '../rhythm-player/rhythm-player'
-
-const AUDIO = document.createElement('audio')
 
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
-  const [rhytmList] = useState(['club.ogg', 'mellow.ogg', 'oldschool.ogg', 'rock.ogg', 'roll.ogg', 'waltz.ogg'])
-  const [rhythmComponent, setRhythmComponent] = useState('player')
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
   const [currentKey, setCurrentKey] = useState('')
   const [currentChord, setCurrentChord] = useState('')
-  const [currentRhythm, setCurrentRhythm] = useState('')
-  const [rhythmPlaying, toggleRhythmPlaying] = useState(false)
 
   useEffect(() => {
     buildChords('Synth')
@@ -31,70 +24,6 @@ const App = () => {
       buildChords(synthTexture)
       setCurrentSynthTexture(synthTexture)
     }
-  }
-
-  const toggleRhythmInterface = () => {
-    if (rhythmComponent === 'player') {
-      setRhythmComponent('maker')
-    } else {
-      setRhythmComponent('player')
-    }
-  }
-
-  const start = () => {
-    if (currentRhythm && !rhythmPlaying) {
-      resume()
-    } else if (!currentRhythm.length) {
-      AUDIO.src = rhytmList[0]
-      AUDIO.load()
-      AUDIO.play()
-      setCurrentRhythm(rhytmList[0])
-      toggleRhythmPlaying(true)
-    }
-  }
-
-  const forward = () => {
-    const nextRhytm = rhytmList.indexOf(currentRhythm) + 1
-    if (nextRhytm === 0 || nextRhytm >= rhytmList.length) {
-      AUDIO.pause()
-      AUDIO.src = ''
-      toggleRhythmPlaying(false)
-      setCurrentRhythm('')
-    } else {
-      AUDIO.pause()
-      AUDIO.src = rhytmList[nextRhytm]
-      AUDIO.load()
-      AUDIO.play()
-      setCurrentRhythm(rhytmList[nextRhytm])
-      toggleRhythmPlaying(true)
-    }
-  }
-
-  const back = () => {
-    const nextRhytm = rhytmList.indexOf(currentRhythm) - 1
-    if (nextRhytm < 0) {
-      AUDIO.pause()
-      AUDIO.src = ''
-      toggleRhythmPlaying(false)
-      setCurrentRhythm('')
-    } else {
-      AUDIO.pause()
-      AUDIO.src = rhytmList[nextRhytm]
-      AUDIO.load()
-      AUDIO.play()
-      setCurrentRhythm(rhytmList[nextRhytm])
-      toggleRhythmPlaying(true)
-    }
-  }
-
-  const pause = () => {
-    AUDIO.pause()
-    toggleRhythmPlaying(false)
-  }
-
-  const resume = () => {
-    AUDIO.play()
-    toggleRhythmPlaying(true)
   }
 
   const handleSynthBoxClick = (chord) => {
@@ -193,26 +122,15 @@ const App = () => {
     synthChords = Object.keys(majorScaleChords[currentKey])
   }
 
-  const rhythmButtonText = rhythmComponent === 'player' ? 'Make your own rhythm!' : 'Choose a rhythm'
-  const rhythmHeaderText = rhythmComponent === 'player' ? 'Rhythm Player' : 'Rhythm Maker'
-
   return Object.keys(majorScaleChords).length ? (
     <div className={styles.app}>
       <header>
         <h1 className={styles.appHeader}>CLICK-CHORD</h1>
       </header>
 
-      <RhythmHeadingsSection
-        rhythmHeaderText={rhythmHeaderText}
-        rhythmButtonText={rhythmButtonText}
-        handleClick={toggleRhythmInterface} />
+      <RhythmHeadingsSection handleTextureClick={changeTexture} />
 
-      <RhythmPlayer
-        rhythmPlaying={rhythmPlaying}
-        pause={pause}
-        start={start}
-        back={back}
-        forward={forward} />
+      <RhythmPlayer />
 
       <div className={styles.appContainerCenter}>
 
@@ -226,7 +144,6 @@ const App = () => {
           handleSynthBoxClick={handleSynthBoxClick}
         />
 
-        <SynthTextureChanger handleTextureClick={changeTexture} />
       </div>
 
     </div>

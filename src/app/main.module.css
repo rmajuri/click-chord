@@ -13,7 +13,13 @@
 
 .appContainerCenter {
   display: grid;
-  grid-template-areas: "scale synth texture";
-  grid-template-columns: 15% 60% 1fr;
+  grid-template-areas: "scale synth";
+  grid-template-columns: 20% 1fr;
   grid-gap: 1.5rem;
+}
+
+@media (max-width: 500px) {
+  .appHeader{
+    font-size: calc(2.5rem + 2vmin);
+  }
 }
