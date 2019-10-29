@@ -1,5 +1,15 @@
+.playerControlsIcon {
+    color: var(--black);
+}
+
+.playerControlsIcon:hover {
+    color: white;
+}
+
 .controls {
-    
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .container {
@@ -8,4 +18,9 @@
     height: 4rem;
     background-color: var(--red);
     margin-bottom: calc(2rem + 1vmin);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: .25rem .25em .25rem var(--black), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--black),
+    .25rem .25rem .25rem white;
 }
