@@ -208,15 +208,18 @@ const App = () => {
         handleClick={toggleRhythmInterface} />
 
       <RhythmPlayer
-          rhythmPlaying={rhythmPlaying}
-          pause={pause}
-          start={start}
-          back={back}
-          forward={forward} />
+        rhythmPlaying={rhythmPlaying}
+        pause={pause}
+        start={start}
+        back={back}
+        forward={forward} />
 
       <div className={styles.appContainerCenter}>
 
-        <KeyChanger />
+        <KeyChanger
+          changedKeyHandler={changedKeyHandler}
+          currentKey={currentKey}
+        />
 
         <SynthBoxContainer
           synthChords={synthChords}
