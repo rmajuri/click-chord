@@ -1,5 +1,4 @@
 import React from 'react'
-import { Typography } from '@material-ui/core'
 
 const SynthBox = ({ chordName, handleSynthBoxClick }) => {
     return (
@@ -8,9 +7,8 @@ const SynthBox = ({ chordName, handleSynthBoxClick }) => {
             onClick={() => handleSynthBoxClick(chordName)}
             className='synthBox'
         >
-            <Typography>
-                <h5>{chordName}</h5>
-            </Typography>
+            <h5>{chordName}</h5>
+
         </div>
     )
 }

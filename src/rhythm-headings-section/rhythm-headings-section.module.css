@@ -10,7 +10,7 @@
     font-family: var(--header-font);
     background-color: var(--red);
     color: var(--black);
-    font-size: calc(1.5rem + 1vmin);
+    font-size: calc(1.2rem + 1vmin);
     margin: .25rem auto .25rem;
     padding: 0 .35rem 0 .35rem;
     border-radius: 5px 5px 0 0;

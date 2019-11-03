@@ -11,6 +11,7 @@
     background-color: var(--black);
     padding: .35rem;
     border-radius: 5px;
+    margin-bottom: .25rem;
   }
 
   .synthTextureButton:hover {
