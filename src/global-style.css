@@ -1,6 +1,10 @@
 :root {
   --red: #ff3855;
   --black: rgb(7, 7, 7);
+  --yellow: #fed22f;
+  --teal: #47bfaa;
+  --blue: #303595;
+  --orange: #fa7533;
   --header-font: 'Candal', sans-serif;
   --secondary-font: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -13,8 +17,7 @@ body {
 }
 
 .synthBox {
-  border: 1px solid var(--black);
-  box-shadow: .25rem .25em .25rem var(--red);
+  border: 1px solid var(--blue);
   font-family: var(--secondary-font);
   font-size: 1.5rem;
   display: flex;
@@ -24,11 +27,14 @@ body {
   width: 6rem;
   cursor: pointer;
   border-radius: 5px;
+  background-color: var(--blue);
+  color: var(--yellow);
+  user-select: none;
 }
 
 .synthBoxPlaying {
-  background-color: var(--red);
-  color: white;
+  background-color: var(--orange);
+  /* color: white; */
 }
 
 @media(max-width: 500px) {

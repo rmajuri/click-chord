@@ -1,9 +1,38 @@
 import React, { useState } from 'react'
 import styles from './synth-texture-changer.module.css'
-import { Popper, Typography } from '@material-ui/core'
+import { Popper, Typography, Paper, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+    root: {
+        color: `var(--blue)`,
+        border: `1px solid var(--blue)`,
+        fontFamily: `var(--header-font)`,
+        background: `var(--yellow)`,
+        marginBottom: `1rem`,
+        '&:hover': {
+            backgroundColor: `var(--orange)`,
+            cursor: `pointer`
+        }
+    },
+    secondaryButton: {
+        backgroundColor: `var(--yellow)`,
+        fontFamily: `var(--secondary-font)`,
+        color: `var(--blue)`,
+        padding: `.25rem`,
+        border: `1px solid var(--blue)`,
+        cursor: `pointer`,
+        borderRadius: `3px`,
+        '&:hover': {
+            backgroundColor: `var(--orange)`,
+        }
+    }
+})
 
 const TextureChanger = ({ handleTextureClick }) => {
     const [anchorEl, setAnhorEl] = useState(null)
+
+    const classes = useStyles()
 
     const open = Boolean(anchorEl)
 
@@ -16,12 +45,12 @@ const TextureChanger = ({ handleTextureClick }) => {
     }
     return (
         <div className={styles.synthTextureButtonArea}>
-            <button
+            <Button
                 type="button"
                 aria-describedby={'Synth Texture Change Button'}
-                className={styles.synthTextureButton}
+                className={[styles.synthTextureButton, classes.root].join(' ')}
                 onClick={handleSynthTextureButtonClick}
-            ><Typography>Change Synth Texture</Typography></button>
+            ><Typography>Change Synth Texture</Typography></Button>
             <Popper
                 id={'synthTextureChanger'}
                 open={open}
@@ -29,44 +58,44 @@ const TextureChanger = ({ handleTextureClick }) => {
                 transition
                 placement='bottom'
             >
-                <div className={styles.textureOptionContainer}>
-                    <button
-                        className={styles.textureOption}
+                <Paper className={styles.textureOptionContainer}>
+                    <Button
+                        className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('Synth')}
                     >
                         <Typography>
                             Synth
                         </Typography>
-                    </button>
-                    <button
-                        className={styles.textureOption}
+                    </Button>
+                    <Button
+                        className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('AMSynth')}
                     >
                         <Typography>
                             AM Synth
                         </Typography>
-                    </button>
-                    <button
-                        className={styles.textureOption}
+                    </Button>
+                    <Button
+                        className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('FMSynth')}
                     >
                         <Typography>
                             FM Synth
                         </Typography>
-                    </button>
-                    <button
-                        className={styles.textureOption}
+                    </Button>
+                    <Button
+                        className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('MonoSynth')}
                     >
                         <Typography>
                             Mono Synth
                         </Typography>
-                    </button>
-                </div>
+                    </Button>
+                </Paper>
             </Popper>
         </div>
     )

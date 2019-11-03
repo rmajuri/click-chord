@@ -9,15 +9,15 @@
 
 .currentKeyText {
     font-family: var(--header-font);
-    color: var(--red);
+    color: var(--teal);
     font-size: calc(1.5rem + 1vmin);
 }
 
 .arrowIcon {
- color: var(--black);
+ color: var(--blue);
  cursor: pointer;
 }
 
 .arrowIcon:hover {
-    color: var(--red);
+    color: var(--orange);
 }

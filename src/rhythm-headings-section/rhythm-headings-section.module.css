@@ -1,17 +1,16 @@
+  
   .rhythmHeaderArea {
     grid-area: header;
-    background-color: var(--red);
-    box-shadow: .25rem .25rem .25rem var(--black);
-    border-radius: 5px 5px 0 0;
-    padding-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
   }
-
+  
   .rhythmHeader {
     font-family: var(--header-font);
-    background-color: var(--red);
-    color: var(--black);
+    color: var(--blue);
     font-size: calc(1.2rem + 1vmin);
-    margin: .25rem auto .25rem;
-    padding: 0 .35rem 0 .35rem;
+    padding: 0 .35rem;
+    margin: 0;
     border-radius: 5px 5px 0 0;
   }

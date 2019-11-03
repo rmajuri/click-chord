@@ -14,13 +14,12 @@
 
 .container {
     grid-area: rhythmMaker;
-    background-color: var(--red);
+    background-color: var(--teal);
     margin-top: 0;
     margin-bottom: calc(2.75rem + 1vmin);
     height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: .25rem .25rem .25rem var(--black);
     border-radius: 0 5px 5px 5px;
 }

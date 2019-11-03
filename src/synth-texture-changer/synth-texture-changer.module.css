@@ -1,21 +1,22 @@
   .synthTextureButtonArea {
     grid-area: synthOptions;
     margin-left: 10px;
+    display: flex;
+    justify-content: center;
   }
 
   .synthTextureButton {
-    color: white;
-    border: 1px solid var(--black);
-    box-shadow: .25rem .25em .25rem var(--red);
+    color: var(--blue);
+    border: 1px solid var(--blue);
     font-family: var(--header-font);
-    background-color: var(--black);
+    background-color: var(--yellow);
     padding: .35rem;
     border-radius: 5px;
     margin-bottom: .25rem;
   }
 
   .synthTextureButton:hover {
-    background-color: var(--red);
+    background-color: var(--orange);
     cursor: pointer;
   }
 
@@ -29,22 +30,24 @@
     grid-template-rows: auto;
     grid-gap: 1rem;
     background-color: white;
-    box-shadow: .25rem .25em .25rem var(--black);
     border-radius: 5px;
 }
 
   .textureOption {
-    background-color: var(--black);
+    background-color: var(--yellow);
     font-family: var(--secondary-font);
-    color: white;
+    color: var(--blue);
     padding: .25rem;
-    border: 1px solid var(--black);
-    box-shadow: .25rem .25em .25rem var(--red);
+    border: 1px solid var(--blue); 
     cursor: pointer;
     border-radius: 3px;
   }
 
   .textureOption:hover {
-    background-color: var(--red);
+    background-color: var(--orange);
     cursor: pointer;
+  }
+
+  .textureOption:focus {
+    outline: none;
   }

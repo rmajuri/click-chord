@@ -5,13 +5,23 @@ import Tone from 'tone'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
-import { Typography } from '@material-ui/core'
+import { Fade, Paper } from '@material-ui/core'
+
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+  root: {
+    background: 'var(--yellow)',
+  }
+})
 
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
   const [currentKey, setCurrentKey] = useState('')
   const [currentChord, setCurrentChord] = useState('')
+
+  const classes = useStyles()
 
   useEffect(() => {
     buildChords('Synth')
@@ -124,11 +134,11 @@ const App = () => {
 
   return Object.keys(majorScaleChords).length ? (
     <div className={styles.app}>
-      <header>
-        <Typography>
+      <Paper className={[styles.headerContainer, classes.root].join(' ')} elevation={2}>
+        <Fade in={true} timeout={{ enter: 3000 }}>
           <h1 className={styles.appHeader}>CLICK-CHORD</h1>
-        </Typography>
-      </header>
+        </Fade>
+      </Paper>
 
       <RhythmGrid handleTextureClick={changeTexture} />
 

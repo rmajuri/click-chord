@@ -2,13 +2,20 @@
   text-align: center;
 }
 
+.headerContainer {
+  width: 80%;
+  margin: 0 auto;
+  background-color: var(--yellow);
+  border-radius: 5px;
+}
+
 .appHeader {
-  display: flex;
-  justify-content: center;
-  text-shadow: -.15rem .15rem var(--red);
   font-size: calc(3rem + 2vmin);
-  color: var(--black);
+  color: var(--blue);
   font-family: var(--header-font);
+  background-color: var(--yellow);
+  width: 100%;
+  border-radius: 5px;
 }
 
 .appContainerCenter {
