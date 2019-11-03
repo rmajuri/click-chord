@@ -17,7 +17,7 @@ const RhythmPlayer = ({ rhythmPlaying, back, start, pause, forward }) => {
         : <PlayArrow onClick={start} fontSize={'large'} className={styles.playerControlsIcon} />
 
     return (
-        <Paper square={true} className={[styles.container, classes.root].join(' ')}>
+        <Paper className={[styles.container, classes.root].join(' ')}>
             <div className={styles.controls}>
                 <ArrowBack onClick={back} fontSize={'large'} className={styles.playerControlsIcon} />
                 {trackPlayOption}

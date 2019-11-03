@@ -1,7 +1,3 @@
-.app {
-  text-align: center;
-}
-
 .headerContainer {
   width: 80%;
   margin: 0 auto;
@@ -16,6 +12,7 @@
   background-color: var(--yellow);
   width: 100%;
   border-radius: 5px;
+  text-align: center;
 }
 
 .appContainerCenter {

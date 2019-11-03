@@ -9,7 +9,7 @@
   .rhythmHeader {
     font-family: var(--header-font);
     color: var(--blue);
-    font-size: calc(1.2rem + 1vmin);
+    font-size: calc(1.5rem + 1vmin);
     padding: 0 .35rem;
     margin: 0;
     border-radius: 5px 5px 0 0;
