@@ -1,12 +1,10 @@
 .currentKeyContainer {
     grid-area: scale;
-    width: 100%;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding-top: calc(2.5rem + 1vmin);
+    padding: calc(2.5rem + 1vmin) 1rem 1rem 0;
 }
 
 .currentKeyText {

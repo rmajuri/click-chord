@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { majorScaleChords, buildChords } from '../chords/chords'
 import styles from './main.module.css'
 import Tone from 'tone'
-import RhythmHeadingsSection from '../rhythm-headings-section/rhythm-headings-section'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
-import RhythmPlayer from '../rhythm-player/rhythm-player'
+import RhythmGrid from '../rhythm-grid/rhythm-grid'
+import { Typography } from '@material-ui/core'
 
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
@@ -125,12 +125,12 @@ const App = () => {
   return Object.keys(majorScaleChords).length ? (
     <div className={styles.app}>
       <header>
-        <h1 className={styles.appHeader}>CLICK-CHORD</h1>
+        <Typography>
+          <h1 className={styles.appHeader}>CLICK-CHORD</h1>
+        </Typography>
       </header>
 
-      <RhythmHeadingsSection handleTextureClick={changeTexture} />
-
-      <RhythmPlayer />
+      <RhythmGrid handleTextureClick={changeTexture} />
 
       <div className={styles.appContainerCenter}>
 
@@ -146,7 +146,7 @@ const App = () => {
 
       </div>
 
-    </div>
+    </div >
   ) : null
 }
 

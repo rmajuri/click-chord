@@ -1,0 +1,7 @@
+.rhythmGrid {
+    display: grid;
+    grid-template-areas: "header header space space synthOptions"
+                          "rhythmMaker rhythmMaker rhythmMaker rhythmMaker rhythmMaker";
+    width: 80%;
+    margin: 0 auto;
+  }

@@ -13,14 +13,14 @@
 }
 
 .container {
-    width: 80%;
-    margin: 0 auto;
-    height: 4rem;
+    grid-area: rhythmMaker;
     background-color: var(--red);
+    margin-top: 0;
     margin-bottom: calc(2.75rem + 1vmin);
+    height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: .25rem .25em .25rem var(--black), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--black),
-    .25rem .25rem .25rem white;
+    box-shadow: .25rem .25rem .25rem var(--black);
+    border-radius: 0 5px 5px 5px;
 }

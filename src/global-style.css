@@ -14,8 +14,7 @@ body {
 
 .synthBox {
   border: 1px solid var(--black);
-  box-shadow: .25rem .25em .25rem var(--red), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--red),
-  .25rem .25rem .25rem white;
+  box-shadow: .25rem .25em .25rem var(--red);
   font-family: var(--secondary-font);
   font-size: 1.5rem;
   display: flex;
@@ -24,9 +23,17 @@ body {
   padding: .5rem;
   width: 6rem;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .synthBoxPlaying {
   background-color: var(--red);
   color: white;
+}
+
+@media(max-width: 500px) {
+  .synthBox {
+      font-size: 1rem;
+      width: 3rem;
+  }
 }

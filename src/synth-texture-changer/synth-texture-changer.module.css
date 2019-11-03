@@ -1,39 +1,49 @@
-.textureOptionContainer {
-    grid-area: texture;
+  .synthTextureButtonArea {
+    grid-area: synthOptions;
+    margin-left: 10px;
+  }
+
+  .synthTextureButton {
+    color: white;
+    border: 1px solid var(--black);
+    box-shadow: .25rem .25em .25rem var(--red);
+    font-family: var(--header-font);
+    background-color: var(--black);
+    padding: .35rem;
+    border-radius: 5px;
+  }
+
+  .synthTextureButton:hover {
+    background-color: var(--red);
+    cursor: pointer;
+  }
+
+  .synthTextureButton:focus {
+    outline: none;
+  }
+
+  .textureOptionContainer {
     display: grid;
     padding: 1rem;
-    padding-right: 2rem;
     grid-template-rows: auto;
     grid-gap: 1rem;
+    background-color: white;
+    box-shadow: .25rem .25em .25rem var(--black);
+    border-radius: 5px;
 }
 
-.textureOptionHeader {
-    margin-top: 0;
-    text-align: center;
-    font-family: var(--header-font);
-    color: var(--black);
-    font-size: calc(1rem + 1vmin);
-}
-
-.textureOption {
+  .textureOption {
     background-color: var(--black);
     font-family: var(--secondary-font);
     color: white;
     padding: .25rem;
-    font-size: calc(1rem + 1vmin);
     border: 1px solid var(--black);
-    box-shadow: .25rem .25em .25rem var(--red), .25rem .25rem .25rem white, .25rem .25rem .25rem var(--red),
-    .25rem .25rem .25rem white;
+    box-shadow: .25rem .25em .25rem var(--red);
     cursor: pointer;
-}
+    border-radius: 3px;
+  }
 
-.textureOption:hover {
+  .textureOption:hover {
     background-color: var(--red);
     cursor: pointer;
-}
-
-@media (max-width: 500px) {
-    .appHeader{
-        font-size: calc(2.5rem + 2vmin);
-    }
-}
+  }

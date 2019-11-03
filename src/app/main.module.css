@@ -5,16 +5,18 @@
 .appHeader {
   display: flex;
   justify-content: center;
-  text-shadow: -3px 5px var(--red);
+  text-shadow: -.15rem .15rem var(--red);
   font-size: calc(3rem + 2vmin);
   color: var(--black);
   font-family: var(--header-font);
 }
 
 .appContainerCenter {
+  width: 80%;
+  margin: 0 auto;
   display: grid;
   grid-template-areas: "scale synth";
-  grid-template-columns: 20% 1fr;
+  grid-template-columns: 10% 1fr;
   grid-gap: 1.5rem;
 }
 

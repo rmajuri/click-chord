@@ -1,17 +1,20 @@
 import React from 'react'
 import styles from './key-changer.module.css'
-import { ArrowUpward, ArrowDownward } from '@material-ui/icons'
+import { ArrowUpwardRounded, ArrowDownwardRounded } from '@material-ui/icons'
+import { Typography } from '@material-ui/core'
 
 const KeyChanger = ({ currentKey, changedKeyHandler }) => {
     return (
         <div className={styles.currentKeyContainer}>
-            <ArrowUpward
+            <ArrowUpwardRounded
                 fontSize={"large"}
                 className={styles.arrowIcon}
                 onClick={() => changedKeyHandler('up')}
             />
-            <h4 className={styles.currentKeyText}>{currentKey}</h4>
-            <ArrowDownward
+            <Typography>
+                <h4 className={styles.currentKeyText}>{currentKey}</h4>
+            </Typography>
+            <ArrowDownwardRounded
                 fontSize={"large"}
                 className={styles.arrowIcon}
                 onClick={() => changedKeyHandler('down')}
