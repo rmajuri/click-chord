@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styles from './synth-texture-changer.module.css'
-import { Popper, Typography, Paper, Button } from '@material-ui/core'
+import { Popper, Paper, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
@@ -50,7 +50,7 @@ const TextureChanger = ({ handleTextureClick }) => {
                 aria-describedby={'Synth Texture Change Button'}
                 className={[styles.synthTextureButton, classes.root].join(' ')}
                 onClick={handleSynthTextureButtonClick}
-            ><Typography>Change Synth Texture</Typography></Button>
+            >Change Synth Texture</Button>
             <Popper
                 id={'synthTextureChanger'}
                 open={open}
@@ -64,36 +64,28 @@ const TextureChanger = ({ handleTextureClick }) => {
                         type="button"
                         onClick={() => handleTextureClick('Synth')}
                     >
-                        <Typography>
                             Synth
-                        </Typography>
                     </Button>
                     <Button
                         className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('AMSynth')}
                     >
-                        <Typography>
                             AM Synth
-                        </Typography>
                     </Button>
                     <Button
                         className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('FMSynth')}
                     >
-                        <Typography>
                             FM Synth
-                        </Typography>
                     </Button>
                     <Button
                         className={classes.secondaryButton}
                         type="button"
                         onClick={() => handleTextureClick('MonoSynth')}
                     >
-                        <Typography>
                             Mono Synth
-                        </Typography>
                     </Button>
                 </Paper>
             </Popper>
