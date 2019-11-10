@@ -37,6 +37,14 @@ body {
   /* color: white; */
 }
 
+.iconParent {
+  color: var(--yellow);
+}
+
+.iconParentPlaying {
+  color: var(--orange);
+}
+
 @media(max-width: 500px) {
   .synthBox {
       font-size: 1rem;

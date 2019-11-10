@@ -21,7 +21,7 @@
   display: grid;
   grid-template-areas: "scale synth";
   grid-template-columns: 10% 1fr;
-  grid-gap: 1.5rem;
+  grid-gap: .5rem;
 }
 
 @media (max-width: 500px) {

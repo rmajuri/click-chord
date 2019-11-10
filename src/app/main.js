@@ -140,7 +140,12 @@ const App = () => {
         </Fade>
       </Paper>
 
-      <RhythmGrid handleTextureClick={changeTexture} />
+      <RhythmGrid
+        handleTextureClick={changeTexture}
+        startSequencer={startDrumSequencer}
+        stopSequencer={stopDrumSequencer}
+        changeBpm={changeBpm}
+      />
 
       <div className={styles.appContainerCenter}>
 
