@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowBack, ArrowForward, PlayArrow, Pause } from '@material-ui/icons'
-import styles from './rhythm-player.module.css'
+import styles from './rhythm-maker.module.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Paper } from '@material-ui/core'
 
@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     }
 })
 
-const RhythmPlayer = ({ rhythmPlaying, back, start, pause, forward }) => {
+const RhythmMaker = ({ rhythmPlaying, back, start, pause, forward }) => {
 
     const classes = useStyles()
     const trackPlayOption = rhythmPlaying ? <Pause onClick={pause} fontSize={'large'} className={styles.playerControlsIcon} />
@@ -27,4 +27,4 @@ const RhythmPlayer = ({ rhythmPlaying, back, start, pause, forward }) => {
     )
 }
 
-export default RhythmPlayer
+export default RhythmMaker
