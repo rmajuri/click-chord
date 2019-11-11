@@ -7,6 +7,14 @@ import { Paper } from '@material-ui/core'
 const useStyles = makeStyles({
     root: {
         background: 'var(--teal)'
+    },
+    shapeIcons: {
+        '@media(max-width: 500px)': {
+            fontSize: '1.5rem'
+        },
+        '@media screen and (device-aspect-ratio: 40/71)': {
+            fontSize: '1.3rem'
+        }
     }
 })
 
@@ -65,7 +73,7 @@ const RhythmMaker = ({
                     fontSize={'large'}
                     key={`kick${i}`}
                     id={`kick${i}`}
-                    className={styles.drumCheckbox}
+                    className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
                 />
             </div>
         )
@@ -82,8 +90,7 @@ const RhythmMaker = ({
                     fontSize={'large'}
                     key={`hat${i}`}
                     id={`hat${i}`}
-                    className={styles.drumCheckbox}
-                    onClick={() => toggleCheckedColor(`hat${i}`)}
+                    className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
                 />
             </div>
         )
@@ -100,7 +107,7 @@ const RhythmMaker = ({
                     fontSize={'large'}
                     key={`snare${i}`}
                     id={`snare${i}`}
-                    className={styles.drumCheckbox}
+                    className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
                 />
             </div>
         )
