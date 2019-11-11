@@ -56,9 +56,9 @@ const App = () => {
       const chordPlaying = document.getElementById(currentChord)
       chordPlaying.classList.remove('synthBoxPlaying')
       majorScaleChords[currentKey][chord].start()
+      setCurrentChord(chord)
       const newChord = document.getElementById(chord)
       newChord.classList.add('synthBoxPlaying')
-      setCurrentChord(chord)
     }
   }
 
@@ -73,6 +73,7 @@ const App = () => {
       const kickClasses = [...document.getElementById(`kickParent${step}`).classList]
       const snareClasses = [...document.getElementById(`snareParent${step}`).classList]
       const hatClasses = [...document.getElementById(`hatParent${step}`).classList]
+
       if (kickClasses.includes('iconParentPlaying')) {
         kick.start()
       }
