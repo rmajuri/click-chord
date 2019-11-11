@@ -30,9 +30,10 @@ const RhythmMaker = ({
     const classes = useStyles()
 
     useEffect(() => {
+        changeBpm(bpm)
         startSequencer(timeCount)
 
-        return stopSequencer()
+        return () => stopSequencer()
     })
 
     const toggleCheckedColor = targetedInput => {
@@ -116,11 +117,6 @@ const RhythmMaker = ({
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
-            {/* <div className={styles.controls}>
-                <ArrowBack onClick={back} fontSize={'large'} className={styles.playerControlsIcon} />
-                {trackPlayOption}
-                <ArrowForward onClick={forward} fontSize={'large'} className={styles.playerControlsIcon} />
-            </div> */}
             <div className={styles.drumSection}>
                 <div className={styles.drumContainer}>
                     <p className={styles.drumTitle}>Kick</p>

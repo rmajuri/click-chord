@@ -66,26 +66,21 @@ const App = () => {
     const kick = new Tone.Player('./kick-deep.wav').toMaster()
     const snare = new Tone.Player('./snare-analog.wav').toMaster()
     const hat = new Tone.Player('./hihat-808.wav').toMaster()
-    const crash = new Tone.Player('./crash-noise.wav').toMaster()
     let index = 0
 
     const repeat = () => {
       let step = index % count
-      let kickInputs = document.querySelector(`#kick${step}`)
-      let snareInputs = document.querySelector(`#snare${step}`)
-      let hatInputs = document.querySelector(`#hat${step}`)
-      let crashInputs = document.querySelector(`#crash${step}`)
-      if (kickInputs.checked) {
+      const kickClasses = [...document.getElementById(`kickParent${step}`).classList]
+      const snareClasses = [...document.getElementById(`snareParent${step}`).classList]
+      const hatClasses = [...document.getElementById(`hatParent${step}`).classList]
+      if (kickClasses.includes('iconParentPlaying')) {
         kick.start()
       }
-      if (snareInputs.checked) {
+      if (snareClasses.includes('iconParentPlaying')) {
         snare.start()
       }
-      if (hatInputs.checked) {
+      if (hatClasses.includes('iconParentPlaying')) {
         hat.start()
-      }
-      if (crashInputs.checked) {
-        crash.start()
       }
       index++
     }
