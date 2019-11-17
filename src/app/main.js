@@ -31,6 +31,9 @@ const App = () => {
     buildChords('Synth')
     setCurrentSynthTexture('Synth')
     setCurrentKey('C')
+    changeBpm(95)
+
+    return () => stopDrumSequencer()
   }, [])
 
   const changeTexture = synthTexture => {
@@ -75,7 +78,7 @@ const App = () => {
     let index = 0
 
     const repeat = () => {
-      let step = index % count
+      let step = count ? index % count : 8
       const kickClasses = [...document.getElementById(`kickParent${step}`).classList]
       const snareClasses = [...document.getElementById(`snareParent${step}`).classList]
       const hatClasses = [...document.getElementById(`hatParent${step}`).classList]

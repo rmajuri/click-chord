@@ -30,7 +30,6 @@ const RhythmMaker = ({
 
     const classes = useStyles()
 
-
     const toggleCheckedColor = targetedInput => {
         const clickedDrum = document.getElementById(`${targetedInput}`)
         const drumClassList = [...clickedDrum.classList]
@@ -42,12 +41,13 @@ const RhythmMaker = ({
     }
 
     const handleSequencerButtonClick = () => {
-        setIsSequencerOn(!isSequencerOn)
 
-        if (isSequencerOn) {
+        if (!isSequencerOn) {
             startSequencer(timeCount)
+            setIsSequencerOn(!isSequencerOn)
         } else {
             stopSequencer()
+            setIsSequencerOn(!isSequencerOn)
         }
     }
 
@@ -119,7 +119,7 @@ const RhythmMaker = ({
         )
     })
 
-    const sequencerButtonText = isSequencerOn ? 'Stop Sequencer' : 'Start Sequencer'
+    const sequencerButtonText = isSequencerOn ? 'Stop Drum Sequencer' : 'Start Drum Sequencer'
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
