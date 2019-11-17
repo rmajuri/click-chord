@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { ClearRounded, StopRounded, FiberManualRecordRounded } from '@material-ui/icons'
 import styles from './rhythm-maker.module.css'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper } from '@material-ui/core'
+import { Paper, Button } from '@material-ui/core'
 
 const useStyles = makeStyles({
     root: {
@@ -26,15 +26,10 @@ const RhythmMaker = ({
 
     const [timeCount, setTimeCount] = useState(8)
     const [bpm, setBpm] = useState(95)
+    const [isSequencerOn, setIsSequencerOn] = useState(false)
 
     const classes = useStyles()
 
-    useEffect(() => {
-        changeBpm(bpm)
-        startSequencer(timeCount)
-
-        return () => stopSequencer()
-    })
 
     const toggleCheckedColor = targetedInput => {
         const clickedDrum = document.getElementById(`${targetedInput}`)
@@ -43,6 +38,16 @@ const RhythmMaker = ({
             clickedDrum.classList.remove('iconParentPlaying')
         } else {
             clickedDrum.classList.add('iconParentPlaying')
+        }
+    }
+
+    const handleSequencerButtonClick = () => {
+        setIsSequencerOn(!isSequencerOn)
+
+        if (isSequencerOn) {
+            startSequencer(timeCount)
+        } else {
+            stopSequencer()
         }
     }
 
@@ -114,9 +119,11 @@ const RhythmMaker = ({
         )
     })
 
+    const sequencerButtonText = isSequencerOn ? 'Stop Sequencer' : 'Start Sequencer'
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
+            <Button onClick={handleSequencerButtonClick}>{sequencerButtonText}</Button>
             <div className={styles.drumSection}>
                 <div className={styles.drumContainer}>
                     <p className={styles.drumTitle}>Kick</p>

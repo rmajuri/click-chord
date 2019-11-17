@@ -37,6 +37,8 @@ const App = () => {
     if (!currentChord && currentSynthTexture !== synthTexture) {
       buildChords(synthTexture)
       setCurrentSynthTexture(synthTexture)
+
+      return () => stopDrumSequencer()
     }
   }
 
