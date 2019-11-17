@@ -15,6 +15,10 @@ const useStyles = makeStyles({
   }
 })
 
+const Kick = new Tone.Buffer('./kick-deep.wav')
+const Hat = new Tone.Buffer('./hihat-808.wav')
+const Snare = new Tone.Buffer('./snare-analog.wav')
+
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
@@ -63,9 +67,9 @@ const App = () => {
   }
 
   const startDrumSequencer = count => {
-    const kick = new Tone.Player('./kick-deep.wav').toMaster()
-    const snare = new Tone.Player('./snare-analog.wav').toMaster()
-    const hat = new Tone.Player('./hihat-808.wav').toMaster()
+    const kick = new Tone.Player(Kick).toMaster()
+    const snare = new Tone.Player(Snare).toMaster()
+    const hat = new Tone.Player(Hat).toMaster()
     let index = 0
 
     const repeat = () => {
