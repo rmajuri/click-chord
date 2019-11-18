@@ -19,11 +19,13 @@ const Kick = new Tone.Buffer('./kick-deep.wav')
 const Hat = new Tone.Buffer('./hihat-808.wav')
 const Snare = new Tone.Buffer('./snare-analog.wav')
 
+
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
   const [currentKey, setCurrentKey] = useState('')
   const [currentChord, setCurrentChord] = useState('')
+  Tone.Transport.bpm.value = 95
 
   const classes = useStyles()
 
@@ -34,6 +36,10 @@ const App = () => {
 
     return () => stopDrumSequencer()
   }, [])
+
+  const changeBpm = bpmValue => {
+    Tone.Transport.bpm.value = bpmValue
+  }
 
   const changeTexture = synthTexture => {
     if (!currentChord && currentSynthTexture !== synthTexture) {
@@ -104,9 +110,6 @@ const App = () => {
     Tone.Transport.clear()
   }
 
-  const changeBpm = bpm => {
-    Tone.Transport.bpm.value = bpm
-  }
 
   const changedKeyHandler = direction => {
     if (currentChord) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { ClearRounded, StopRounded, FiberManualRecordRounded } from '@material-ui/icons'
 import styles from './rhythm-maker.module.css'
 import { makeStyles } from '@material-ui/core/styles'
@@ -28,7 +28,8 @@ const useStyles = makeStyles({
         }
     },
     input: {
-        width: '2rem'
+        width: '3rem',
+        color: 'var(--blue)'
     }
 })
 
@@ -54,8 +55,14 @@ const RhythmMaker = ({
         }
     }
 
-    const handleSequencerButtonClick = () => {
+    const handleBpmChange = e => {
+        if (e) {
+            changeBpm(e.target.value)
+        }
+        setBpm(e.target.value)
+    }
 
+    const handleSequencerButtonClick = () => {
         if (!isSequencerOn) {
             startSequencer(timeCount)
             setIsSequencerOn(!isSequencerOn)
@@ -70,14 +77,6 @@ const RhythmMaker = ({
             stopSequencer()
             setTimeCount(count)
             startSequencer(count)
-        }
-    }
-
-    const handleBpmChange = event => {
-        console.log(event.target.value)
-        if (Number.isInteger(event.target.value)) {
-            setBpm(event.target.value)
-            changeBpm(bpm)
         }
     }
 
@@ -148,7 +147,7 @@ const RhythmMaker = ({
                     <Input type='number'
                         className={classes.input}
                         value={bpm}
-                        onChange={e => handleBpmChange(e)}
+                        onChange={handleBpmChange}
                         inputProps={{ min: '10', max: '120', step: '1' }}
                     />
                 </div>
