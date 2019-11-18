@@ -36,12 +36,12 @@ const useStyles = makeStyles({
 const RhythmMaker = ({
     stopSequencer,
     startSequencer,
-    changeBpm
+    changeBpm,
+    bpm
 }) => {
 
     const [timeCount, setTimeCount] = useState(8)
     const [isSequencerOn, setIsSequencerOn] = useState(false)
-    const [bpm, setBpm] = useState(95)
 
     const classes = useStyles()
 
@@ -59,7 +59,6 @@ const RhythmMaker = ({
         if (e) {
             changeBpm(e.target.value)
         }
-        setBpm(e.target.value)
     }
 
     const handleSequencerButtonClick = () => {

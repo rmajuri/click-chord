@@ -25,7 +25,7 @@ const App = () => {
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
   const [currentKey, setCurrentKey] = useState('')
   const [currentChord, setCurrentChord] = useState('')
-  Tone.Transport.bpm.value = 95
+  const [bpm, setBpm] = useState(null)
 
   const classes = useStyles()
 
@@ -33,12 +33,14 @@ const App = () => {
     buildChords('Synth')
     setCurrentSynthTexture('Synth')
     setCurrentKey('C')
+    changeBpm(95)
 
     return () => stopDrumSequencer()
   }, [])
 
   const changeBpm = bpmValue => {
     Tone.Transport.bpm.value = bpmValue
+    setBpm(bpmValue)
   }
 
   const changeTexture = synthTexture => {
@@ -152,6 +154,7 @@ const App = () => {
         startSequencer={startDrumSequencer}
         stopSequencer={stopDrumSequencer}
         changeBpm={changeBpm}
+        bpm={bpm}
       />
 
       <div className={styles.appContainerCenter}>
