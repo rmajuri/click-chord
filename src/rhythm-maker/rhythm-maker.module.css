@@ -48,3 +48,14 @@
 .drumCheckbox {
     color: inherit;
 }
+
+.drumControlContainer {
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33% 
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 2rem;
+}

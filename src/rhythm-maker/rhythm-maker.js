@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ClearRounded, StopRounded, FiberManualRecordRounded } from '@material-ui/icons'
 import styles from './rhythm-maker.module.css'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Button } from '@material-ui/core'
+import { Paper, Button, Input } from '@material-ui/core'
 
 const useStyles = makeStyles({
     root: {
@@ -15,6 +15,20 @@ const useStyles = makeStyles({
         '@media screen and (device-aspect-ratio: 40/71)': {
             fontSize: '1.3rem'
         }
+    },
+    sequencerButton: {
+        color: 'var(--blue)',
+        border: '1px solid var(--blue)',
+        fontFamily: 'var(--header-font)',
+        margin: '.5rem auto',
+        display: 'flex',
+        '&:hover': {
+            color: 'var(--orange)',
+            border: '1px solid var(--orange)',
+        }
+    },
+    input: {
+        width: '2rem'
     }
 })
 
@@ -25,8 +39,8 @@ const RhythmMaker = ({
 }) => {
 
     const [timeCount, setTimeCount] = useState(8)
-    const [bpm, setBpm] = useState(95)
     const [isSequencerOn, setIsSequencerOn] = useState(false)
+    const [bpm, setBpm] = useState(95)
 
     const classes = useStyles()
 
@@ -60,6 +74,7 @@ const RhythmMaker = ({
     }
 
     const handleBpmChange = event => {
+        console.log(event.target.value)
         if (Number.isInteger(event.target.value)) {
             setBpm(event.target.value)
             changeBpm(bpm)
@@ -123,7 +138,21 @@ const RhythmMaker = ({
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
-            <Button onClick={handleSequencerButtonClick}>{sequencerButtonText}</Button>
+            <div className={styles.drumControlContainer}>
+                <div>
+                    <Button>4/4</Button>
+                    <Button>6/8</Button>
+                </div>
+                <Button className={classes.sequencerButton} variant='outlined' onClick={handleSequencerButtonClick}>{sequencerButtonText}</Button>
+                <div className={styles.inputContainer}>
+                    <Input type='number'
+                        className={classes.input}
+                        value={bpm}
+                        onChange={e => handleBpmChange(e)}
+                        inputProps={{ min: '10', max: '120', step: '1' }}
+                    />
+                </div>
+            </div>
             <div className={styles.drumSection}>
                 <div className={styles.drumContainer}>
                     <p className={styles.drumTitle}>Kick</p>

@@ -31,7 +31,6 @@ const App = () => {
     buildChords('Synth')
     setCurrentSynthTexture('Synth')
     setCurrentKey('C')
-    changeBpm(95)
 
     return () => stopDrumSequencer()
   }, [])
