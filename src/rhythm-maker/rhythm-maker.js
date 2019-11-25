@@ -46,7 +46,6 @@ const RhythmMaker = ({
         if (!!count && count !== timeCount) {
             stopSequencer()
             setTimeCount(count)
-            startSequencer(count)
         }
     }
 
@@ -103,14 +102,14 @@ const RhythmMaker = ({
         )
     })
 
-    const sequencerLabel = isSequencerOn ? 'Off' : 'On'
+    const sequencerLabel = !isSequencerOn ? 'Off' : 'On'
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
             <div className={styles.drumControlContainer}>
                 <div>
-                    <Button>4/4</Button>
-                    <Button>6/8</Button>
+                    <Button className={classes.timeCountButton} onClick={() => changeTimeCount(8)}>4/4</Button>
+                    <Button className={classes.timeCountButton} onClick={() => changeTimeCount(6)}>6/8</Button>
                 </div>
                 <div className={styles.switchContainer}>
                     <FormGroup row>
@@ -186,7 +185,8 @@ const useStyles = makeStyles({
     },
     input: {
         width: '3rem',
-        color: 'var(--blue)'
+        color: 'var(--blue)',
+        fontFamily: 'var(--secondary-font)',
     },
     switch: {
         color: 'var(--orange)',
@@ -202,6 +202,13 @@ const useStyles = makeStyles({
     switchLabel: {
         fontFamily: 'var(--header-font)',
         color: 'var(--blue)'
+    },
+    timeCountButton: {
+        fontFamily: 'var(--secondary-font)',
+        color: 'var(--blue)',
+        '&:active': {
+            backgroundColor: 'var(--orange)'
+        }
     }
 })
 
