@@ -57,5 +57,10 @@
 .inputContainer {
     display: flex;
     justify-content: flex-end;
-    padding-right: 2rem;
+    padding-right: 1rem;
+}
+
+.switchContainer {
+    display: flex;
+    justify-content: center;
 }

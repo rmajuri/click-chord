@@ -2,36 +2,7 @@ import React, { useState } from 'react'
 import { ClearRounded, StopRounded, FiberManualRecordRounded } from '@material-ui/icons'
 import styles from './rhythm-maker.module.css'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Button, Input } from '@material-ui/core'
-
-const useStyles = makeStyles({
-    root: {
-        background: 'var(--teal)'
-    },
-    shapeIcons: {
-        '@media(max-width: 500px)': {
-            fontSize: '1.5rem'
-        },
-        '@media screen and (device-aspect-ratio: 40/71)': {
-            fontSize: '1.3rem'
-        }
-    },
-    sequencerButton: {
-        color: 'var(--blue)',
-        border: '1px solid var(--blue)',
-        fontFamily: 'var(--header-font)',
-        margin: '.5rem auto',
-        display: 'flex',
-        '&:hover': {
-            color: 'var(--orange)',
-            border: '1px solid var(--orange)',
-        }
-    },
-    input: {
-        width: '3rem',
-        color: 'var(--blue)'
-    }
-})
+import { Paper, Button, Input, Switch, FormGroup, FormControlLabel } from '@material-ui/core'
 
 const RhythmMaker = ({
     stopSequencer,
@@ -61,13 +32,13 @@ const RhythmMaker = ({
         }
     }
 
-    const handleSequencerButtonClick = () => {
+    const handleSequencerToggle = () => {
         if (!isSequencerOn) {
             startSequencer(timeCount)
-            setIsSequencerOn(!isSequencerOn)
+            setIsSequencerOn(true)
         } else {
             stopSequencer()
-            setIsSequencerOn(!isSequencerOn)
+            setIsSequencerOn(false)
         }
     }
 
@@ -132,7 +103,7 @@ const RhythmMaker = ({
         )
     })
 
-    const sequencerButtonText = isSequencerOn ? 'Stop Drum Sequencer' : 'Start Drum Sequencer'
+    const sequencerLabel = isSequencerOn ? 'Off' : 'On'
 
     return (
         <Paper className={[styles.container, classes.root].join(' ')}>
@@ -141,7 +112,22 @@ const RhythmMaker = ({
                     <Button>4/4</Button>
                     <Button>6/8</Button>
                 </div>
-                <Button className={classes.sequencerButton} variant='outlined' onClick={handleSequencerButtonClick}>{sequencerButtonText}</Button>
+                <div className={styles.switchContainer}>
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={isSequencerOn}
+                                    onChange={handleSequencerToggle}
+                                    value='sequencerToggle'
+                                    classes={{ switchBase: classes.switch, checked: classes.checked, track: classes.track }}
+                                />
+                            }
+                            label={sequencerLabel}
+                            classes={{ label: classes.switchLabel }}
+                        />
+                    </FormGroup>
+                </div>
                 <div className={styles.inputContainer}>
                     <Input type='number'
                         className={classes.input}
@@ -174,5 +160,49 @@ const RhythmMaker = ({
         </Paper>
     )
 }
+
+const useStyles = makeStyles({
+    root: {
+        background: 'var(--teal)'
+    },
+    shapeIcons: {
+        '@media(max-width: 500px)': {
+            fontSize: '1.5rem'
+        },
+        '@media screen and (device-aspect-ratio: 40/71)': {
+            fontSize: '1.3rem'
+        }
+    },
+    sequencerButton: {
+        color: 'var(--blue)',
+        border: '1px solid var(--blue)',
+        fontFamily: 'var(--header-font)',
+        margin: '.5rem auto',
+        display: 'flex',
+        '&:hover': {
+            color: 'var(--orange)',
+            border: '1px solid var(--orange)',
+        }
+    },
+    input: {
+        width: '3rem',
+        color: 'var(--blue)'
+    },
+    switch: {
+        color: 'var(--orange)',
+        '&$checked': {
+            color: 'var(--orange)',
+        },
+        '&$checked + $track': {
+            backgroundColor: 'var(--orange)',
+        }
+    },
+    checked: {},
+    track: {},
+    switchLabel: {
+        fontFamily: 'var(--header-font)',
+        color: 'var(--blue)'
+    }
+})
 
 export default RhythmMaker
