@@ -19,7 +19,6 @@ const Kick = new Tone.Buffer('./kick-deep.wav')
 const Hat = new Tone.Buffer('./hihat-808.wav')
 const Snare = new Tone.Buffer('./snare-analog.wav')
 
-
 const App = () => {
   const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
@@ -103,7 +102,7 @@ const App = () => {
     }
 
     Tone.Transport.scheduleRepeat(repeat, `${count}n`)
-    Tone.Transport.start()
+    Tone.Transport.start('+0.1')
   }
 
   const stopDrumSequencer = () => {
