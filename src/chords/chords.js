@@ -6,7 +6,7 @@ export const majorScaleChords = {}
 
 export function buildChords(synthTexture) {
   synth = new Tone.PolySynth(6, Tone[synthTexture], {
-    volume: -2,
+    volume: -2
   }).toMaster()
 
   class chordObj {

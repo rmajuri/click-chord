@@ -4,7 +4,13 @@ import RhythmMaker from '../rhythm-maker/rhythm-maker'
 import SynthTextureChanger from '../synth-texture-changer/synth-texture-changer'
 import styles from './rhythm-grid.module.css'
 
-const RhythmGrid = ({ handleTextureClick, stopSequencer, startSequencer, changeBpm, bpm }) => {
+const RhythmGrid = ({
+  handleTextureClick,
+  stopSequencer,
+  startSequencer,
+  changeBpm,
+  bpm
+}) => {
   return (
     <div className={styles.rhythmGrid}>
       <RhythmHeader />

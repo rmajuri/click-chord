@@ -13,7 +13,20 @@ const Hat = new Tone.Buffer('./hihat-808.wav')
 const Snare = new Tone.Buffer('./snare-analog.wav')
 
 const App = () => {
-  const [keyOptions] = useState(['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'])
+  const [keyOptions] = useState([
+    'C',
+    'Db',
+    'D',
+    'Eb',
+    'E',
+    'F',
+    'Gb',
+    'G',
+    'Ab',
+    'A',
+    'Bb',
+    'B'
+  ])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('')
   const [currentKey, setCurrentKey] = useState('')
   const [currentChord, setCurrentChord] = useState('')
@@ -30,12 +43,12 @@ const App = () => {
     return () => stopDrumSequencer()
   }, [])
 
-  const changeBpm = bpmValue => {
+  const changeBpm = (bpmValue) => {
     Tone.Transport.bpm.value = bpmValue
     setBpm(bpmValue)
   }
 
-  const changeTexture = synthTexture => {
+  const changeTexture = (synthTexture) => {
     if (!currentChord && currentSynthTexture !== synthTexture) {
       buildChords(synthTexture)
       setCurrentSynthTexture(synthTexture)
@@ -44,7 +57,7 @@ const App = () => {
     }
   }
 
-  const handleSynthBoxClick = chord => {
+  const handleSynthBoxClick = (chord) => {
     if (!currentChord) {
       majorScaleChords[currentKey][chord].start()
       setCurrentChord(chord)
@@ -70,7 +83,7 @@ const App = () => {
     }
   }
 
-  const startDrumSequencer = count => {
+  const startDrumSequencer = (count) => {
     const kick = new Tone.Player(Kick).toMaster()
     const snare = new Tone.Player(Snare).toMaster()
     const hat = new Tone.Player(Hat).toMaster()
@@ -78,9 +91,15 @@ const App = () => {
 
     const repeat = () => {
       const step = count ? index % count : 8
-      const kickClasses = [...document.getElementById(`kickParent${step}`).classList]
-      const snareClasses = [...document.getElementById(`snareParent${step}`).classList]
-      const hatClasses = [...document.getElementById(`hatParent${step}`).classList]
+      const kickClasses = [
+        ...document.getElementById(`kickParent${step}`).classList
+      ]
+      const snareClasses = [
+        ...document.getElementById(`snareParent${step}`).classList
+      ]
+      const hatClasses = [
+        ...document.getElementById(`hatParent${step}`).classList
+      ]
 
       if (kickClasses.includes('iconParentPlaying')) {
         kick.start()
@@ -104,7 +123,7 @@ const App = () => {
     Tone.Transport.clear()
   }
 
-  const changedKeyHandler = direction => {
+  const changedKeyHandler = (direction) => {
     if (currentChord) {
       majorScaleChords[currentKey][currentChord].stop()
       const chordPlaying = document.getElementById(currentChord)
@@ -132,7 +151,10 @@ const App = () => {
 
   return Object.keys(majorScaleChords).length ? (
     <div className={styles.app}>
-      <Paper className={[styles.headerContainer, classes.root].join(' ')} elevation={2}>
+      <Paper
+        className={[styles.headerContainer, classes.root].join(' ')}
+        elevation={2}
+      >
         <Fade in timeout={{ enter: 3000 }}>
           <h1 className={styles.appHeader}>CLICK-CHORD</h1>
         </Fade>
@@ -147,9 +169,15 @@ const App = () => {
       />
 
       <div className={styles.appContainerCenter}>
-        <KeyChanger changedKeyHandler={changedKeyHandler} currentKey={currentKey} />
+        <KeyChanger
+          changedKeyHandler={changedKeyHandler}
+          currentKey={currentKey}
+        />
 
-        <SynthBoxContainer synthChords={synthChords} handleSynthBoxClick={handleSynthBoxClick} />
+        <SynthBoxContainer
+          synthChords={synthChords}
+          handleSynthBoxClick={handleSynthBoxClick}
+        />
       </div>
     </div>
   ) : null
@@ -157,8 +185,8 @@ const App = () => {
 
 const useStyles = makeStyles({
   root: {
-    background: 'var(--yellow)',
-  },
+    background: 'var(--yellow)'
+  }
 })
 
 export default App

@@ -5,8 +5,14 @@ import styles from './synth-box-container.module.css'
 const SynthBoxContainer = ({ synthChords, handleSynthBoxClick }) => {
   return (
     <div className={styles.synthBoxGrid}>
-      {synthChords.map(chord => {
-        return <SynthBox key={chord} chordName={chord} handleSynthBoxClick={handleSynthBoxClick} />
+      {synthChords.map((chord) => {
+        return (
+          <SynthBox
+            key={chord}
+            chordName={chord}
+            handleSynthBoxClick={handleSynthBoxClick}
+          />
+        )
       })}
     </div>
   )

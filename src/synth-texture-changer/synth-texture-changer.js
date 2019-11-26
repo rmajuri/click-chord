@@ -10,7 +10,7 @@ const TextureChanger = ({ handleTextureClick }) => {
 
   const open = Boolean(anchorEl)
 
-  const handleSynthTextureButtonClick = e => {
+  const handleSynthTextureButtonClick = (e) => {
     if (!anchorEl) {
       setAnhorEl(e.currentTarget)
     } else {
@@ -20,45 +20,45 @@ const TextureChanger = ({ handleTextureClick }) => {
   return (
     <div className={styles.synthTextureButtonArea}>
       <Button
-        type="button"
-        aria-describedby="Synth Texture Change Button"
+        type='button'
+        aria-describedby='Synth Texture Change Button'
         className={[styles.synthTextureButton, classes.root].join(' ')}
         onClick={handleSynthTextureButtonClick}
       >
         Change Synth Texture
       </Button>
       <Popper
-        id="synthTextureChanger"
+        id='synthTextureChanger'
         open={open}
         anchorEl={anchorEl}
         transition
-        placement="bottom"
+        placement='bottom'
       >
         <Paper className={styles.textureOptionContainer}>
           <Button
             className={classes.secondaryButton}
-            type="button"
+            type='button'
             onClick={() => handleTextureClick('Synth')}
           >
             Synth
           </Button>
           <Button
             className={classes.secondaryButton}
-            type="button"
+            type='button'
             onClick={() => handleTextureClick('AMSynth')}
           >
             AM Synth
           </Button>
           <Button
             className={classes.secondaryButton}
-            type="button"
+            type='button'
             onClick={() => handleTextureClick('FMSynth')}
           >
             FM Synth
           </Button>
           <Button
             className={classes.secondaryButton}
-            type="button"
+            type='button'
             onClick={() => handleTextureClick('MonoSynth')}
           >
             Mono Synth
@@ -71,28 +71,28 @@ const TextureChanger = ({ handleTextureClick }) => {
 
 const useStyles = makeStyles({
   root: {
-    color: `var(--blue)`,
-    border: `1px solid var(--blue)`,
-    fontFamily: `var(--header-font)`,
-    background: `var(--yellow)`,
-    marginBottom: `1rem`,
+    color: 'var(--blue)',
+    border: '1px solid var(--blue)',
+    fontFamily: 'var(--header-font)',
+    background: 'var(--yellow)',
+    marginBottom: '1rem',
     '&:hover': {
-      backgroundColor: `var(--orange)`,
-      cursor: `pointer`,
-    },
+      backgroundColor: 'var(--orange)',
+      cursor: 'pointer'
+    }
   },
   secondaryButton: {
-    backgroundColor: `var(--yellow)`,
-    fontFamily: `var(--secondary-font)`,
-    color: `var(--blue)`,
-    padding: `.25rem`,
+    backgroundColor: 'var(--yellow)',
+    fontFamily: 'var(--secondary-font)',
+    color: 'var(--blue)',
+    padding: '.25rem',
     border: `1px solid var(--blue)`,
-    cursor: `pointer`,
-    borderRadius: `3px`,
+    cursor: 'pointer',
+    borderRadius: '3px',
     '&:hover': {
-      backgroundColor: `var(--orange)`,
-    },
-  },
+      backgroundColor: 'var(--orange)'
+    }
+  }
 })
 
 export default TextureChanger

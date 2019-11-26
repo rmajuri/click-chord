@@ -23,7 +23,7 @@ body {
   display: flex;
   justify-content: center;
   align-content: center;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 6rem;
   cursor: pointer;
   border-radius: 5px;
@@ -44,9 +44,9 @@ body {
   color: var(--orange);
 }
 
-@media(max-width: 500px) {
+@media (max-width: 500px) {
   .synthBox {
-      font-size: 1rem;
-      width: 3rem;
+    font-size: 1rem;
+    width: 3rem;
   }
 }

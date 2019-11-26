@@ -1,7 +1,18 @@
 import React, { useState } from 'react'
-import { ClearRounded, StopRounded, FiberManualRecordRounded } from '@material-ui/icons'
+import {
+  ClearRounded,
+  StopRounded,
+  FiberManualRecordRounded
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Button, Input, Switch, FormGroup, FormControlLabel } from '@material-ui/core'
+import {
+  Paper,
+  Button,
+  Input,
+  Switch,
+  FormGroup,
+  FormControlLabel
+} from '@material-ui/core'
 import styles from './rhythm-maker.module.css'
 
 const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
@@ -10,7 +21,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
 
   const classes = useStyles()
 
-  const toggleCheckedColor = targetedInput => {
+  const toggleCheckedColor = (targetedInput) => {
     const clickedDrum = document.getElementById(`${targetedInput}`)
     const drumClassList = [...clickedDrum.classList]
     if (drumClassList.includes('iconParentPlaying')) {
@@ -20,7 +31,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
     }
   }
 
-  const handleBpmChange = e => {
+  const handleBpmChange = (e) => {
     if (e) {
       changeBpm(e.target.value)
     }
@@ -36,7 +47,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
     }
   }
 
-  const changeTimeCount = count => {
+  const changeTimeCount = (count) => {
     if (!!count && count !== timeCount) {
       stopSequencer()
       setTimeCount(count)
@@ -48,13 +59,13 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   const kicks = drumSteps.map((step, i) => {
     return (
       <div
-        className="iconParent"
+        className='iconParent'
         key={`kickParent${i}`}
         id={`kickParent${i}`}
         onClick={() => toggleCheckedColor(`kickParent${i}`)}
       >
         <FiberManualRecordRounded
-          fontSize="large"
+          fontSize='large'
           key={`kick${i}`}
           id={`kick${i}`}
           className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
@@ -66,13 +77,13 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   const hiHats = drumSteps.map((step, i) => {
     return (
       <div
-        className="iconParent"
+        className='iconParent'
         key={`hatParent${i}`}
         id={`hatParent${i}`}
         onClick={() => toggleCheckedColor(`hatParent${i}`)}
       >
         <ClearRounded
-          fontSize="large"
+          fontSize='large'
           key={`hat${i}`}
           id={`hat${i}`}
           className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
@@ -84,13 +95,13 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   const snares = drumSteps.map((step, i) => {
     return (
       <div
-        className="iconParent"
+        className='iconParent'
         key={`snareParent${i}`}
         id={`snareParent${i}`}
         onClick={() => toggleCheckedColor(`snareParent${i}`)}
       >
         <StopRounded
-          fontSize="large"
+          fontSize='large'
           key={`snare${i}`}
           id={`snare${i}`}
           className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
@@ -105,28 +116,34 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
     <Paper className={[styles.container, classes.root].join(' ')}>
       <div className={styles.drumControlContainer}>
         <div>
-          <Button className={classes.timeCountButton} onClick={() => changeTimeCount(8)}>
+          <Button
+            className={classes.timeCountButton}
+            onClick={() => changeTimeCount(8)}
+          >
             4/4
           </Button>
-          <Button className={classes.timeCountButton} onClick={() => changeTimeCount(6)}>
+          <Button
+            className={classes.timeCountButton}
+            onClick={() => changeTimeCount(6)}
+          >
             6/8
           </Button>
         </div>
         <div className={styles.switchContainer}>
           <FormGroup row>
             <FormControlLabel
-              control={(
-<Switch
+              control={
+                <Switch
                   checked={isSequencerOn}
                   onChange={handleSequencerToggle}
-                  value="sequencerToggle"
+                  value='sequencerToggle'
                   classes={{
                     switchBase: classes.switch,
                     checked: classes.checked,
-                    track: classes.track,
+                    track: classes.track
                   }}
                 />
-)}
+              }
               label={sequencerLabel}
               classes={{ label: classes.switchLabel }}
             />
@@ -134,7 +151,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
         </div>
         <div className={styles.inputContainer}>
           <Input
-            type="number"
+            type='number'
             className={classes.input}
             value={bpm}
             onChange={handleBpmChange}
@@ -162,15 +179,15 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
 
 const useStyles = makeStyles({
   root: {
-    background: 'var(--teal)',
+    background: 'var(--teal)'
   },
   shapeIcons: {
     '@media(max-width: 500px)': {
-      fontSize: '1.5rem',
+      fontSize: '1.5rem'
     },
     '@media screen and (device-aspect-ratio: 40/71)': {
-      fontSize: '1.3rem',
-    },
+      fontSize: '1.3rem'
+    }
   },
   sequencerButton: {
     color: 'var(--blue)',
@@ -180,36 +197,36 @@ const useStyles = makeStyles({
     display: 'flex',
     '&:hover': {
       color: 'var(--orange)',
-      border: '1px solid var(--orange)',
-    },
+      border: '1px solid var(--orange)'
+    }
   },
   input: {
     width: '3rem',
     color: 'var(--blue)',
-    fontFamily: 'var(--secondary-font)',
+    fontFamily: 'var(--secondary-font)'
   },
   switch: {
     color: 'var(--orange)',
     '&$checked': {
-      color: 'var(--orange)',
+      color: 'var(--orange)'
     },
     '&$checked + $track': {
-      backgroundColor: 'var(--orange)',
-    },
+      backgroundColor: 'var(--orange)'
+    }
   },
   checked: {},
   track: {},
   switchLabel: {
     fontFamily: 'var(--header-font)',
-    color: 'var(--blue)',
+    color: 'var(--blue)'
   },
   timeCountButton: {
     fontFamily: 'var(--secondary-font)',
     color: 'var(--blue)',
     '&:active': {
-      backgroundColor: 'var(--orange)',
-    },
-  },
+      backgroundColor: 'var(--orange)'
+    }
+  }
 })
 
 export default RhythmMaker
