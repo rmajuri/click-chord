@@ -39,7 +39,7 @@
 }
 
 .drums {
-    padding-left: .5rem;
+    padding-left: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -51,7 +51,7 @@
 
 .drumControlContainer {
     display: grid;
-    grid-template-columns: 33.33% 33.33% 33.33% 
+    grid-template-columns: 33.33% 33.33% 33.33%;
 }
 
 .inputContainer {

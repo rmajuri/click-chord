@@ -1,23 +1,23 @@
 .currentKeyContainer {
-    grid-area: scale;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: calc(2.5rem + 1vmin) 1rem 1rem 0;
+  grid-area: scale;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: calc(2.5rem + 1vmin) 1rem 1rem 0;
 }
 
 .currentKeyText {
-    font-family: var(--header-font);
-    color: var(--teal);
-    font-size: calc(1.5rem + 1vmin);
+  font-family: var(--header-font);
+  color: var(--teal);
+  font-size: calc(1.5rem + 1vmin);
 }
 
 .arrowIcon {
- color: var(--blue);
- cursor: pointer;
+  color: var(--blue);
+  cursor: pointer;
 }
 
 .arrowIcon:hover {
-    color: var(--orange);
+  color: var(--orange);
 }

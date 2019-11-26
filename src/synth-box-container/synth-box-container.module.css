@@ -1,15 +1,15 @@
 .synthBoxGrid {
-    grid-area: synth;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 6rem);
-    grid-gap: 1.5rem;
-    margin-bottom: 6rem;
-    justify-content: flex-start;
+  grid-area: synth;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 6rem);
+  grid-gap: 1.5rem;
+  margin-bottom: 6rem;
+  justify-content: flex-start;
 }
 
-@media(max-width: 500px) {
-    .synthBoxGrid {
-        grid-template-columns: repeat(auto-fit, 3rem);
-        justify-content: center;
-    }
+@media (max-width: 500px) {
+  .synthBoxGrid {
+    grid-template-columns: repeat(auto-fit, 3rem);
+    justify-content: center;
   }
+}

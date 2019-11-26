@@ -19,13 +19,13 @@
   width: 80%;
   margin: 0 auto;
   display: grid;
-  grid-template-areas: "scale synth";
+  grid-template-areas: 'scale synth';
   grid-template-columns: 10% 1fr;
-  grid-gap: .5rem;
+  grid-gap: 0.5rem;
 }
 
 @media (max-width: 500px) {
-  .appHeader{
+  .appHeader {
     font-size: calc(2.5rem + 2vmin);
   }
 }

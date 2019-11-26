@@ -1,53 +1,53 @@
-  .synthTextureButtonArea {
-    grid-area: synthOptions;
-    margin-left: 10px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .synthTextureButton {
-    color: var(--blue);
-    border: 1px solid var(--blue);
-    font-family: var(--header-font);
-    background-color: var(--yellow);
-    padding: .35rem;
-    border-radius: 5px;
-    margin-bottom: .25rem;
-  }
-
-  .synthTextureButton:hover {
-    background-color: var(--orange);
-    cursor: pointer;
-  }
-
-  .synthTextureButton:focus {
-    outline: none;
-  }
-
-  .textureOptionContainer {
-    display: grid;
-    padding: 1rem;
-    grid-template-rows: auto;
-    grid-gap: 1rem;
-    background-color: white;
-    border-radius: 5px;
+.synthTextureButtonArea {
+  grid-area: synthOptions;
+  margin-left: 10px;
+  display: flex;
+  justify-content: center;
 }
 
-  .textureOption {
-    background-color: var(--yellow);
-    font-family: var(--secondary-font);
-    color: var(--blue);
-    padding: .25rem;
-    border: 1px solid var(--blue); 
-    cursor: pointer;
-    border-radius: 3px;
-  }
+.synthTextureButton {
+  color: var(--blue);
+  border: 1px solid var(--blue);
+  font-family: var(--header-font);
+  background-color: var(--yellow);
+  padding: 0.35rem;
+  border-radius: 5px;
+  margin-bottom: 0.25rem;
+}
 
-  .textureOption:hover {
-    background-color: var(--orange);
-    cursor: pointer;
-  }
+.synthTextureButton:hover {
+  background-color: var(--orange);
+  cursor: pointer;
+}
 
-  .textureOption:focus {
-    outline: none;
-  }
+.synthTextureButton:focus {
+  outline: none;
+}
+
+.textureOptionContainer {
+  display: grid;
+  padding: 1rem;
+  grid-template-rows: auto;
+  grid-gap: 1rem;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.textureOption {
+  background-color: var(--yellow);
+  font-family: var(--secondary-font);
+  color: var(--blue);
+  padding: 0.25rem;
+  border: 1px solid var(--blue);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.textureOption:hover {
+  background-color: var(--orange);
+  cursor: pointer;
+}
+
+.textureOption:focus {
+  outline: none;
+}
