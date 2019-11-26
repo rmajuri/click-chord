@@ -27,6 +27,7 @@ const TextureChanger = ({ handleTextureClick }) => {
       >
         Change Synth Texture
       </Button>
+
       <Popper
         id='synthTextureChanger'
         open={open}
@@ -42,6 +43,7 @@ const TextureChanger = ({ handleTextureClick }) => {
           >
             Synth
           </Button>
+
           <Button
             className={classes.secondaryButton}
             type='button'
@@ -49,6 +51,7 @@ const TextureChanger = ({ handleTextureClick }) => {
           >
             AM Synth
           </Button>
+
           <Button
             className={classes.secondaryButton}
             type='button'
@@ -56,6 +59,7 @@ const TextureChanger = ({ handleTextureClick }) => {
           >
             FM Synth
           </Button>
+
           <Button
             className={classes.secondaryButton}
             type='button'

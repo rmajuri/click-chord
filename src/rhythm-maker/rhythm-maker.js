@@ -122,6 +122,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
           >
             4/4
           </Button>
+
           <Button
             className={classes.timeCountButton}
             onClick={() => changeTimeCount(6)}
@@ -129,6 +130,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
             6/8
           </Button>
         </div>
+
         <div className={styles.switchContainer}>
           <FormGroup row>
             <FormControlLabel
@@ -149,6 +151,7 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
             />
           </FormGroup>
         </div>
+
         <div className={styles.inputContainer}>
           <Input
             type='number'
@@ -159,15 +162,18 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
           />
         </div>
       </div>
+
       <div className={styles.drumSection}>
         <div className={styles.drumContainer}>
           <p className={styles.drumTitle}>Kick</p>
           <div className={styles.drums}>{kicks}</div>
         </div>
+
         <div className={styles.drumContainer}>
           <p className={styles.drumTitle}>Hi-Hat</p>
           <div className={styles.drums}>{hiHats}</div>
         </div>
+
         <div className={styles.drumContainer}>
           <p className={styles.drumTitle}>Snare</p>
           <div className={styles.drums}>{snares}</div>

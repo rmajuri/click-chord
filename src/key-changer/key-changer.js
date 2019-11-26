@@ -10,7 +10,9 @@ const KeyChanger = ({ currentKey, changedKeyHandler }) => {
         className={styles.arrowIcon}
         onClick={() => changedKeyHandler('up')}
       />
+
       <h4 className={styles.currentKeyText}>{currentKey}</h4>
+
       <ArrowDownwardRounded
         fontSize='large'
         className={styles.arrowIcon}
