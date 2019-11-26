@@ -4,8 +4,8 @@ let synth
 export const majorScaleChords = {}
 
 export function buildChords(synthTexture) {
-    synth = new Tone.PolySynth(4, Tone[synthTexture], {
-        'volume': -1
+    synth = new Tone.PolySynth(6, Tone[synthTexture], {
+        'volume': -2
     }).toMaster()
 
     class chordObj {

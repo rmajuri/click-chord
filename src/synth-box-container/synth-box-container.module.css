@@ -10,5 +10,6 @@
 @media(max-width: 500px) {
     .synthBoxGrid {
         grid-template-columns: repeat(auto-fit, 3rem);
+        justify-content: center;
     }
   }
