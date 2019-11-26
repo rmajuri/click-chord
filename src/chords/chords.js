@@ -5,8 +5,12 @@ let synth
 export const majorScaleChords = {}
 
 export function buildChords(synthTexture) {
-  synth = new Tone.PolySynth(6, Tone[synthTexture], {
-    volume: -2
+  const velocity = synthTexture === 'triangle' ? 0.5 : 0.3
+  synth = new Tone.PolySynth(6, Tone.Synth, {
+    volume: -2,
+    oscillator: {
+      type: synthTexture
+    }
   }).toMaster()
 
   class chordObj {
@@ -15,7 +19,7 @@ export function buildChords(synthTexture) {
     }
 
     start() {
-      synth.triggerAttack(this.notes, '+0.01', 0.5)
+      synth.triggerAttack(this.notes, '+0.01', velocity)
     }
 
     stop() {

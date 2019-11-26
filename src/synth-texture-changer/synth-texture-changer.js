@@ -39,34 +39,42 @@ const TextureChanger = ({ handleTextureClick }) => {
           <Button
             className={classes.secondaryButton}
             type='button'
-            onClick={() => handleTextureClick('Synth')}
+            onClick={() => handleTextureClick('sine')}
           >
-            Synth
+            Sine
           </Button>
 
           <Button
             className={classes.secondaryButton}
             type='button'
-            onClick={() => handleTextureClick('AMSynth')}
+            onClick={() => handleTextureClick('square')}
           >
-            AM Synth
+            Square
           </Button>
 
           <Button
             className={classes.secondaryButton}
             type='button'
-            onClick={() => handleTextureClick('FMSynth')}
+            onClick={() => handleTextureClick('sawtooth')}
           >
-            FM Synth
+            Saw
           </Button>
 
           <Button
+            className={classes.secondaryButton}
+            type='button'
+            onClick={() => handleTextureClick('triangle')}
+          >
+            Triangle
+          </Button>
+
+          {/* <Button
             className={classes.secondaryButton}
             type='button'
             onClick={() => handleTextureClick('MonoSynth')}
           >
             Mono Synth
-          </Button>
+          </Button> */}
         </Paper>
       </Popper>
     </div>

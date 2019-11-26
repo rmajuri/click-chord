@@ -35,8 +35,8 @@ const App = () => {
   const classes = useStyles()
 
   useEffect(() => {
-    buildChords('Synth')
-    setCurrentSynthTexture('Synth')
+    buildChords('sine')
+    setCurrentSynthTexture('Sine')
     setCurrentKey('C')
     changeBpm(95)
 
