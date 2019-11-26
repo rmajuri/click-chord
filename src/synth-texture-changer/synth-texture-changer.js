@@ -5,6 +5,7 @@ import styles from './synth-texture-changer.module.css'
 
 const TextureChanger = ({ handleTextureClick }) => {
   const [anchorEl, setAnhorEl] = useState(null)
+  const [synthTextures] = useState(['Square', 'Triangle', 'Sawtooth', 'Sine'])
 
   const classes = useStyles()
 
@@ -36,45 +37,18 @@ const TextureChanger = ({ handleTextureClick }) => {
         placement='bottom'
       >
         <Paper className={styles.textureOptionContainer}>
-          <Button
-            className={classes.secondaryButton}
-            type='button'
-            onClick={() => handleTextureClick('sine')}
-          >
-            Sine
-          </Button>
-
-          <Button
-            className={classes.secondaryButton}
-            type='button'
-            onClick={() => handleTextureClick('square')}
-          >
-            Square
-          </Button>
-
-          <Button
-            className={classes.secondaryButton}
-            type='button'
-            onClick={() => handleTextureClick('sawtooth')}
-          >
-            Saw
-          </Button>
-
-          <Button
-            className={classes.secondaryButton}
-            type='button'
-            onClick={() => handleTextureClick('triangle')}
-          >
-            Triangle
-          </Button>
-
-          {/* <Button
-            className={classes.secondaryButton}
-            type='button'
-            onClick={() => handleTextureClick('MonoSynth')}
-          >
-            Mono Synth
-          </Button> */}
+          {synthTextures.map((texture, i) => {
+            return (
+              <Button
+                key={texture}
+                className={classes.secondaryButton}
+                type='button'
+                onClick={() => handleTextureClick(texture.toLowerCase())}
+              >
+                {texture}
+              </Button>
+            )
+          })}
         </Paper>
       </Popper>
     </div>
