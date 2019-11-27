@@ -2,7 +2,7 @@
 
 ## What is Click-Chord?
 
-Click-Chord is an app that allows users to build synthesizer chord progressions by clicking boxes. Each box, when clicked, triggers a different chord within its respecive major scale. Users can build chord progressions in any key they like.
+Click-Chord is an app that allows users to build synthesizer chord progressions by clicking boxes. Each box, when clicked, triggers a different chord within its respective major scale. Users can build chord progressions in any key they like.
 
 In addition to building chord progressions, users can also build drum their own drum loops to accompany their compositions.
 
@@ -20,6 +20,6 @@ You can adjust the tone of oscillator nodes by manipulating details about them l
 
 Or you can use Tone.
 
-Tone's library abstracts the granular audio-tweaking details away from you by giving you easy-to-use API's that start and stop synth sounds with some pretty cool textures. And, if you want to play a musical chord using JS, instead of having to specify the exact frequency of each oscillator node and starting and stopping them at the same time, you can use Tone's [polysnyth API](https://tonejs.github.io/docs/13.8.25/PolySynth), which exposes a function that allows you to tell it exactly which nodes to play at which octave (e.g., C4, E4, G4).
+Tone's library abstracts the granular audio-tweaking details away from you by giving you easy-to-use API's that start and stop synth sounds with some pretty cool textures. And, if you want to play a musical chord using JS, instead of having to specify the exact frequency of each oscillator node and starting and stopping them at the same time, you can use Tone's [Polysnyth API](https://tonejs.github.io/docs/13.8.25/PolySynth), which exposes a function that allows you to tell it exactly which nodes to play at which octave (e.g., C4, E4, G4).
 
 This is the real magic going on behind Click-Chord.
