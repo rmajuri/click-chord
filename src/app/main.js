@@ -181,7 +181,11 @@ const App = () => {
       </div>
       <footer style={{ textAlign: 'center' }}>
         <p style={{ fontFamily: 'var(--secondary-font)' }}>
-          Built with 🎵 by{' '}
+          Built with{' '}
+          <span role='img' aria-label='music note'>
+            🎵
+          </span>{' '}
+          by{' '}
           <a href='https://www.robertmajuri.com/' target='blank'>
             Rob Majuri
           </a>
