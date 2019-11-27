@@ -8,7 +8,7 @@ In addition to building chord progressions, users can also build drum their own 
 
 ## How can I run Click-Chord locally?
 
-After cloning the Click-Chord repo, run `npm install` and then `npm start`. The app will be served up at http://localhost:8080/.
+After cloning the Click-Chord repo, run `npm install` and then `npm start`. The app will be served up at http://localhost:3000/.
 
 ## How was Click-Chord made?
 
