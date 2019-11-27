@@ -5,8 +5,9 @@ let synth
 export const majorScaleChords = {}
 
 export function buildChords(synthTexture) {
+  const volume = synthTexture === 'sine' || synthTexture === 'triangle' ? 1 : -2
   synth = new Tone.PolySynth(6, Tone.Synth, {
-    volume: -2,
+    volume: volume,
     oscillator: {
       type: synthTexture
     }

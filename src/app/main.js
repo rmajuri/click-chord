@@ -179,6 +179,14 @@ const App = () => {
           handleSynthBoxClick={handleSynthBoxClick}
         />
       </div>
+      <footer style={{ textAlign: 'center' }}>
+        <p style={{ fontFamily: 'var(--secondary-font)' }}>
+          Built with 🎵 by{' '}
+          <a href='https://www.robertmajuri.com/' target='blank'>
+            Rob Majuri
+          </a>
+        </p>
+      </footer>
     </div>
   ) : null
 }
