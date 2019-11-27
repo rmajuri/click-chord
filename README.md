@@ -4,7 +4,7 @@
 
 Click-Chord is an app that allows users to build synthesizer chord progressions by clicking boxes. Each box, when clicked, triggers a different chord within its respecive major scale. Users can build chord progressions in any key they like.
 
-In addition to building chord progressions, users can also build drum their own drum loops to accompany their compositions. Or, if they don't want to build drum loops, they can choose pre-built drum loops from the "rhythm player".
+In addition to building chord progressions, users can also build drum their own drum loops to accompany their compositions.
 
 ## How can I run Click-Chord locally?
 
