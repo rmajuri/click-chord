@@ -12,7 +12,7 @@ import RhythmGrid from '../rhythm-grid/rhythm-grid'
 const Kick = new Tone.Buffer('./kick-deep.wav')
 const Hat = new Tone.Buffer('./hihat-808.wav')
 const Snare = new Tone.Buffer('./snare-analog.wav')
-const AudioContext = new Tone.Context()
+// const AudioContext = new Tone.Context()
 
 const App = () => {
   const [keyOptions] = useState([
@@ -41,7 +41,7 @@ const App = () => {
     setCurrentSynthTexture('square')
     setCurrentKey('C')
     changeBpm(95)
-    StartAudioContext(AudioContext)
+    StartAudioContext(Tone.context)
 
     return () => stopDrumSequencer()
   }, [])
