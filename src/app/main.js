@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Tone from 'tone'
+import StartAudioContext from 'startaudiocontext'
 import { Fade, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { majorScaleChords, buildChords } from '../chords/chords'
@@ -11,6 +12,7 @@ import RhythmGrid from '../rhythm-grid/rhythm-grid'
 const Kick = new Tone.Buffer('./kick-deep.wav')
 const Hat = new Tone.Buffer('./hihat-808.wav')
 const Snare = new Tone.Buffer('./snare-analog.wav')
+const AudioContext = new Tone.Context()
 
 const App = () => {
   const [keyOptions] = useState([
@@ -39,6 +41,7 @@ const App = () => {
     setCurrentSynthTexture('square')
     setCurrentKey('C')
     changeBpm(95)
+    StartAudioContext(AudioContext)
 
     return () => stopDrumSequencer()
   }, [])
