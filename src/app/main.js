@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Tone from 'tone'
-import StartAudioContext from 'startaudiocontext'
 import { Fade, Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { majorScaleChords, buildChords } from '../chords/chords'
@@ -40,7 +39,6 @@ const App = () => {
     setCurrentSynthTexture('square')
     setCurrentKey('C')
     changeBpm(95)
-    StartAudioContext(Tone.context)
 
     return () => stopDrumSequencer()
   }, [])
