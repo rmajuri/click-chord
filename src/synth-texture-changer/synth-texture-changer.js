@@ -23,7 +23,7 @@ const TextureChanger = ({ handleTextureClick }) => {
       <Button
         type='button'
         aria-describedby='Synth Texture Change Button'
-        className={[styles.synthTextureButton, classes.root].join(' ')}
+        className={classes.root}
         onClick={handleSynthTextureButtonClick}
       >
         Change Synth Texture
