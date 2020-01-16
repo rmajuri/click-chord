@@ -5,25 +5,6 @@
   justify-content: center;
 }
 
-.synthTextureButton {
-  color: var(--blue);
-  border: 1px solid var(--blue);
-  font-family: var(--header-font);
-  background-color: var(--yellow);
-  padding: 0.35rem;
-  border-radius: 5px;
-  margin-bottom: 0.25rem;
-}
-
-.synthTextureButton:hover {
-  background-color: var(--orange);
-  cursor: pointer;
-}
-
-.synthTextureButton:focus {
-  outline: none;
-}
-
 .textureOptionContainer {
   display: grid;
   padding: 1rem;
