@@ -150,7 +150,7 @@ const App = () => {
   }
 
   return Object.keys(majorScaleChords).length ? (
-    <div className={styles.app}>
+    <div>
       <Paper
         className={[styles.headerContainer, classes.root].join(' ')}
         elevation={2}
