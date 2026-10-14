@@ -7,16 +7,24 @@ const RhythmGrid = ({
   handleTextureClick,
   stopSequencer,
   startSequencer,
+  drumSounds,
+  onDrumSoundChange,
   changeBpm,
-  bpm
+  bpm,
+  hasSample
 }) => {
   return (
     <div className={styles.rhythmGrid}>
       <RhythmHeader />
-      <SynthTextureChanger handleTextureClick={handleTextureClick} />
+      <SynthTextureChanger
+        handleTextureClick={handleTextureClick}
+        hasSample={hasSample}
+      />
       <RhythmMaker
         stopSequencer={stopSequencer}
         startSequencer={startSequencer}
+        drumSounds={drumSounds}
+        onDrumSoundChange={onDrumSoundChange}
         changeBpm={changeBpm}
         bpm={bpm}
       />

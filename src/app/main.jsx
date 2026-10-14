@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import * as Tone from 'tone'
-import { majorScaleChords, buildChords } from '../chords/chords'
+import {
+  majorScaleChords,
+  buildChords,
+  setSampleSustain
+} from '../chords/chords'
 import styles from './main.module.css'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
@@ -16,16 +20,22 @@ import {
   startBassNote,
   stopBassNote
 } from '../bass/bass'
+import Sampler from '../sampler/sampler'
+import {
+  isMicSupported,
+  startMicCapture,
+  MAX_SAMPLE_SECONDS
+} from '../sampler/mic-capture'
 import {
   quantizeRecording,
   BEATS_PER_BAR,
   octaveRange
 } from '../progression-recorder/quantize'
+import { drumSounds, defaultDrumSounds } from '../drums/drum-sounds'
 
-const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
-const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
-const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
 const transport = Tone.getTransport()
+// Shared by the Play button and the drum sequencer's Sample row
+const samplePlayer = new Tone.Player().toDestination()
 
 buildChords('square')
 buildBass('round')
@@ -38,6 +48,19 @@ let loopParts = null
 // Where the loop started on the transport and how long its longest track is,
 // so a take recorded over the loop can be timed against it
 let loopTiming = null
+
+// Read on every step, so a newly picked sound plays without a restart
+const drumVoices = {}
+
+const setDrumVoice = (drum, soundName) => {
+  drumVoices[drum]?.dispose()
+  drumVoices[drum] = drumSounds[drum][soundName]()
+  return drumVoices[drum]
+}
+
+Object.entries(defaultDrumSounds).forEach(([drum, soundName]) =>
+  setDrumVoice(drum, soundName)
+)
 
 const stopTransportIfIdle = () => {
   if (drumRepeatId === null && loopParts === null) {
@@ -150,6 +173,7 @@ const App = () => {
     'B'
   ])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('square')
+  const [currentDrumSounds, setCurrentDrumSounds] = useState(defaultDrumSounds)
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
   const [view, setView] = useState('chords')
@@ -162,7 +186,17 @@ const App = () => {
   const [isLooping, setIsLooping] = useState(false)
   const [playingSteps, setPlayingSteps] = useState(NO_STEPS_PLAYING)
   const [octaves, setOctaves] = useState(NO_OCTAVES)
+  const [samplerState, setSamplerState] = useState(() =>
+    isMicSupported() ? 'idle' : 'unsupported'
+  )
+  const [sampleLength, setSampleLength] = useState(0)
+  const [sampleNote, setSampleNote] = useState(null)
+  const [sampleSustain, setSampleSustainState] = useState(true)
+  const sampleRef = useRef(null)
   const recordingRef = useRef(null)
+  const stopMicRef = useRef(null)
+  const micTimeoutRef = useRef(null)
+  const stopSampleRecordingRef = useRef(null)
   const octavesRef = useRef(octaves)
 
   const chordProgression = useMemo(
@@ -183,6 +217,8 @@ const App = () => {
     () => () => {
       transport.stop()
       transport.cancel()
+      clearTimeout(micTimeoutRef.current)
+      stopMicRef.current?.()
     },
     []
   )
@@ -319,14 +355,104 @@ const App = () => {
     updateOctaves(track, { ...trackOctaves, [step.eventIndex]: octave })
   }
 
+  const stopSampleRecording = async () => {
+    const stopMic = stopMicRef.current
+    if (!stopMic) {
+      return
+    }
+    stopMicRef.current = null
+    clearTimeout(micTimeoutRef.current)
+    setSamplerState('processing')
+    try {
+      const sample = await stopMic()
+      sampleRef.current = sample
+      samplePlayer.buffer = sample.buffer
+      setSampleLength(sample.buffer.duration)
+      setSampleNote(
+        sample.frequency ? Tone.Frequency(sample.frequency).toNote() : null
+      )
+      setSamplerState('idle')
+      if (currentSynthTexture === 'sample') {
+        stopCurrentChord()
+        buildChords('sample', { ...sample, sustain: sampleSustain })
+      }
+    } catch {
+      setSamplerState('error')
+    }
+  }
+
+  const startSampleRecording = async () => {
+    await Tone.start()
+    setSamplerState('requesting')
+    try {
+      stopMicRef.current = await startMicCapture()
+    } catch (err) {
+      setSamplerState(err.name === 'NotAllowedError' ? 'denied' : 'error')
+      return
+    }
+    setSamplerState('recording')
+    // Goes through a ref so the auto-stop sees the chord and texture state
+    // as of when it fires, not when recording started
+    micTimeoutRef.current = setTimeout(
+      () => stopSampleRecordingRef.current(),
+      MAX_SAMPLE_SECONDS * 1000
+    )
+  }
+
+  useEffect(() => {
+    stopSampleRecordingRef.current = stopSampleRecording
+  })
+
+  const playSample = async () => {
+    await Tone.start()
+    if (samplePlayer.loaded) {
+      samplePlayer.start()
+    }
+  }
+
+  const clearSample = () => {
+    samplePlayer.stop()
+    samplePlayer.buffer = new Tone.ToneAudioBuffer()
+    sampleRef.current = null
+    setSampleLength(0)
+    setSampleNote(null)
+    if (currentSynthTexture === 'sample') {
+      stopCurrentChord()
+      buildChords('square')
+      setCurrentSynthTexture('square')
+    }
+  }
+
+  // Rebuilding the chords swaps the instrument out from under a held chord,
+  // so let go of it first
+  const stopCurrentChord = () => {
+    if (currentChord) {
+      majorScaleChords[currentKey][currentChord].stop()
+      document.getElementById(currentChord).classList.remove('synthBoxPlaying')
+      setCurrentChord('')
+      captureChordChange(null)
+    }
+  }
+
+  const changeSampleSustain = (sustain) => {
+    setSampleSustain(sustain)
+    setSampleSustainState(sustain)
+  }
+
   const changeBpm = (bpmValue) => {
     transport.bpm.value = Number(bpmValue)
     setBpm(bpmValue)
   }
 
   const changeTexture = (synthTexture) => {
+    if (synthTexture === 'sample' && !sampleRef.current) {
+      return
+    }
     if (!currentChord && currentSynthTexture !== synthTexture) {
-      buildChords(synthTexture)
+      buildChords(synthTexture, {
+        ...sampleRef.current,
+        sustain: sampleSustain
+      })
       setCurrentSynthTexture(synthTexture)
 
       return () => stopDrumSequencer()
@@ -396,22 +522,13 @@ const App = () => {
     }
   }
 
-  const stopChord = () => {
-    if (currentChord) {
-      majorScaleChords[currentKey][currentChord].stop()
-      document.getElementById(currentChord).classList.remove('synthBoxPlaying')
-      setCurrentChord('')
-      captureChordChange(null)
-    }
-  }
-
   // Whatever's sounding in the view being hidden stops, since its box won't
   // be on screen to stop it
   const changeView = (nextView) => {
     if (nextView === view) {
       return
     }
-    stopChord()
+    stopCurrentChord()
     stopBass()
     // A take only records the instrument it started on
     if (recorderState !== 'idle') {
@@ -420,11 +537,15 @@ const App = () => {
     setView(nextView)
   }
 
+  const changeDrumSound = async (drum, soundName) => {
+    await Tone.start()
+    // Play one hit so the user hears what they picked
+    setDrumVoice(drum, soundName).play(Tone.now())
+    setCurrentDrumSounds({ ...currentDrumSounds, [drum]: soundName })
+  }
+
   const startDrumSequencer = async (count) => {
     await Tone.start()
-    const kick = new Tone.Player(Kick).toDestination()
-    const snare = new Tone.Player(Snare).toDestination()
-    const hat = new Tone.Player(Hat).toDestination()
     const stepTicks = Tone.Time(`${count}n`).toTicks()
 
     // Step from the transport position rather than a counter so the drums
@@ -433,24 +554,20 @@ const App = () => {
       const step = count
         ? Math.round(transport.getTicksAtTime(time) / stepTicks) % count
         : 8
-      const kickClasses = [
-        ...document.getElementById(`kickParent${step}`).classList
-      ]
-      const snareClasses = [
-        ...document.getElementById(`snareParent${step}`).classList
-      ]
-      const hatClasses = [
-        ...document.getElementById(`hatParent${step}`).classList
-      ]
 
-      if (kickClasses.includes('iconParentPlaying')) {
-        kick.start()
-      }
-      if (snareClasses.includes('iconParentPlaying')) {
-        snare.start()
-      }
-      if (hatClasses.includes('iconParentPlaying')) {
-        hat.start()
+      Object.keys(drumVoices).forEach((drum) => {
+        const drumClasses = [
+          ...document.getElementById(`${drum}Parent${step}`).classList
+        ]
+        if (drumClasses.includes('iconParentPlaying')) {
+          drumVoices[drum].play(time)
+        }
+      })
+      const sampleClasses = [
+        ...document.getElementById(`sampleParent${step}`).classList
+      ]
+      if (sampleClasses.includes('iconParentPlaying') && samplePlayer.loaded) {
+        samplePlayer.start(time)
       }
     }
 
@@ -499,8 +616,24 @@ const App = () => {
         handleTextureClick={changeTexture}
         startSequencer={startDrumSequencer}
         stopSequencer={stopDrumSequencer}
+        drumSounds={currentDrumSounds}
+        onDrumSoundChange={changeDrumSound}
         changeBpm={changeBpm}
         bpm={bpm}
+        hasSample={sampleLength > 0}
+      />
+
+      <Sampler
+        samplerState={samplerState}
+        hasSample={sampleLength > 0}
+        sampleLength={sampleLength}
+        sampleNote={sampleNote}
+        sustain={sampleSustain}
+        onSustainChange={changeSampleSustain}
+        onRecord={startSampleRecording}
+        onStopRecording={stopSampleRecording}
+        onPlay={playSample}
+        onClear={clearSample}
       />
 
       <ProgressionRecorder

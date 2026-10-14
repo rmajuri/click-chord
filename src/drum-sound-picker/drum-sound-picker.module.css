@@ -1,0 +1,60 @@
+.menuAnchor {
+  position: relative;
+}
+
+.drumTitle {
+  padding: 0 0 5px;
+  border: 0;
+  background: none;
+  font-family: var(--secondary-font);
+  font-size: inherit;
+  color: var(--blue);
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.drumTitle:hover {
+  color: var(--orange);
+}
+
+.drumTitle:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.soundMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: max-content;
+  z-index: 1;
+  display: grid;
+  padding: 1rem;
+  grid-gap: 0.75rem;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: var(--shadow-1);
+}
+
+.soundOption {
+  display: flex;
+  background-color: var(--yellow);
+  font-family: var(--secondary-font);
+  color: var(--blue);
+  padding: 0.25rem;
+  border: 1px solid var(--blue);
+  border-radius: 3px;
+}
+
+.soundOption:hover,
+.soundOption[aria-pressed='true'] {
+  background-color: var(--orange);
+}
+
+@media (max-width: 500px) {
+  .drumTitle {
+    font-size: 0.8rem;
+  }
+}

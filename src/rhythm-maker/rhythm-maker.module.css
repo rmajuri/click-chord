@@ -23,7 +23,7 @@
 
 .drumContainer {
   display: grid;
-  grid-template-columns: 3rem 1fr;
+  grid-template-columns: 4.5rem 1fr;
   width: 100%;
 }
 
@@ -51,6 +51,14 @@
 }
 
 @media (max-width: 500px) {
+  .drumContainer {
+    grid-template-columns: 3.5rem 1fr;
+  }
+
+  .drumTitle {
+    font-size: 0.8rem;
+  }
+
   .drumCheckbox {
     font-size: 1.5rem;
   }
