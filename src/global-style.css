@@ -87,7 +87,7 @@ body {
   }
 }
 
-.bassBoxOutOfKey:not(.synthBoxPlaying) {
+.noteBoxOutOfKey:not(.synthBoxPlaying) {
   background-color: white;
   color: var(--blue);
 }

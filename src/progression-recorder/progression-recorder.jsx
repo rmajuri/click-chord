@@ -1,11 +1,13 @@
 import { QUANTIZE_GRIDS, BEATS_PER_BAR, octaveRange } from './quantize'
-import { transposeNote } from '../bass/bass'
+import { transposeNote } from '../mono-instrument/mono-instrument'
+import { MONO_INSTRUMENTS } from '../mono-instrument/instruments'
 import { ArrowUpIcon, ArrowDownIcon } from '../icons/icons'
 import styles from './progression-recorder.module.css'
 
 const TRACKS = [
   { id: 'chords', label: 'Chords', noun: 'a chord' },
-  { id: 'bass', label: 'Bass', noun: 'a bass note' }
+  { id: 'bass', label: 'Bass', noun: 'a bass note' },
+  { id: 'melody', label: 'Melody', noun: 'a note' }
 ]
 
 const ProgressionRecorder = ({
@@ -42,9 +44,10 @@ const ProgressionRecorder = ({
     progression.steps.map((step, i) => {
       const octave = octaves[track][step.eventIndex] ?? 0
       const range = step.name && octaveRange(track, step.name)
-      // Bass notes are named with their octave, so the name follows the shift
+      // Single notes are named with their octave, so the name follows the
+      // shift
       const name =
-        track === 'bass' && step.name
+        MONO_INSTRUMENTS[track] && step.name
           ? transposeNote(step.name, octave)
           : step.name
 
@@ -173,7 +176,7 @@ const ProgressionRecorder = ({
       ) : (
         <div className={styles.timeline}>
           <p className={styles.status}>
-            Hit record and play some chords or a bass line to loop it
+            Hit record and play some chords, a bass line or a melody to loop it
           </p>
         </div>
       )}

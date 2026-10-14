@@ -11,15 +11,9 @@ import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 import ProgressionRecorder from '../progression-recorder/progression-recorder'
 import SegmentedControl from '../segmented-control/segmented-control'
-import BassBoxContainer from '../bass-box-container/bass-box-container'
-import {
-  buildBass,
-  BASS_TEXTURES,
-  bassNotesForKey,
-  transposeNote,
-  startBassNote,
-  stopBassNote
-} from '../bass/bass'
+import NoteBoxContainer from '../note-box-container/note-box-container'
+import { transposeNote } from '../mono-instrument/mono-instrument'
+import { MONO_INSTRUMENTS } from '../mono-instrument/instruments'
 import Sampler from '../sampler/sampler'
 import {
   isMicSupported,
@@ -38,7 +32,12 @@ const transport = Tone.getTransport()
 const samplePlayer = new Tone.Player().toDestination()
 
 buildChords('square')
-buildBass('round')
+
+const DEFAULT_MONO_TEXTURES = { bass: 'round', melody: 'lead' }
+Object.entries(DEFAULT_MONO_TEXTURES).forEach(([track, texture]) =>
+  MONO_INSTRUMENTS[track].build(texture)
+)
+
 transport.bpm.value = 95
 
 // The drum sequencer and the progression loop share the transport, so each
@@ -76,11 +75,12 @@ const stopDrumSequencer = () => {
   stopTransportIfIdle()
 }
 
-// Starts a step's chord or bass note and returns a function that stops it
+// Starts a step's chord or note and returns a function that stops it
 const soundStep = (track, step, octave, time) => {
-  if (track === 'bass') {
-    startBassNote(transposeNote(step.name, octave), time, 'loop')
-    return (stopTime) => stopBassNote(stopTime, 'loop')
+  const instrument = MONO_INSTRUMENTS[track]
+  if (instrument) {
+    instrument.start(transposeNote(step.name, octave), time, 'loop')
+    return (stopTime) => instrument.stop(stopTime, 'loop')
   }
   const chord = majorScaleChords[step.key][step.name]
   chord.start(time, octave)
@@ -154,8 +154,13 @@ const startLoop = (progressions, { getOctave, isMuted, onStep }) => {
   }
 }
 
-const NO_STEPS_PLAYING = { chords: -1, bass: -1 }
-const NO_OCTAVES = { chords: {}, bass: {} }
+const TRACKS = ['chords', 'bass', 'melody']
+const byTrack = (value) =>
+  Object.fromEntries(TRACKS.map((track) => [track, value]))
+const NO_RECORDINGS = byTrack(null)
+const NO_STEPS_PLAYING = byTrack(-1)
+const NO_OCTAVES = byTrack({})
+const NO_NOTES = { bass: '', melody: '' }
 
 const App = () => {
   const [keyOptions] = useState([
@@ -177,11 +182,12 @@ const App = () => {
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
   const [view, setView] = useState('chords')
-  const [currentBassNote, setCurrentBassNote] = useState('')
-  const [bassTexture, setBassTexture] = useState('round')
+  // The note held on each single-note instrument
+  const [currentNotes, setCurrentNotes] = useState(NO_NOTES)
+  const [monoTextures, setMonoTextures] = useState(DEFAULT_MONO_TEXTURES)
   const [bpm, setBpm] = useState(95)
   const [recorderState, setRecorderState] = useState('idle')
-  const [recordings, setRecordings] = useState({ chords: null, bass: null })
+  const [recordings, setRecordings] = useState(NO_RECORDINGS)
   const [grid, setGrid] = useState(1)
   const [isLooping, setIsLooping] = useState(false)
   const [playingSteps, setPlayingSteps] = useState(NO_STEPS_PLAYING)
@@ -199,19 +205,17 @@ const App = () => {
   const stopSampleRecordingRef = useRef(null)
   const octavesRef = useRef(octaves)
 
-  const chordProgression = useMemo(
-    () => quantizeRecording(recordings.chords, grid),
-    [recordings.chords, grid]
-  )
-  const bassProgression = useMemo(
-    () => quantizeRecording(recordings.bass, grid),
-    [recordings.bass, grid]
-  )
   const progressions = useMemo(
-    () => ({ chords: chordProgression, bass: bassProgression }),
-    [chordProgression, bassProgression]
+    () =>
+      Object.fromEntries(
+        TRACKS.map((track) => [
+          track,
+          quantizeRecording(recordings[track], grid)
+        ])
+      ),
+    [recordings, grid]
   )
-  const hasProgression = Boolean(chordProgression || bassProgression)
+  const hasProgression = TRACKS.some((track) => progressions[track])
 
   useEffect(
     () => () => {
@@ -290,8 +294,8 @@ const App = () => {
     if (view === 'chords' && currentChord) {
       captureChordChange(currentChord)
     }
-    if (view === 'bass' && currentBassNote) {
-      captureChange('bass', currentBassNote)
+    if (currentNotes[view]) {
+      captureChange(view, currentNotes[view])
     }
   }
 
@@ -325,14 +329,13 @@ const App = () => {
 
   const clearRecording = () => {
     setIsLooping(false)
-    setRecordings({ chords: null, bass: null })
+    setRecordings(NO_RECORDINGS)
     octavesRef.current = NO_OCTAVES
     setOctaves(NO_OCTAVES)
   }
 
   const clearTrack = (track) => {
-    const other = track === 'chords' ? bassProgression : chordProgression
-    if (!other) {
+    if (!TRACKS.some((other) => other !== track && progressions[other])) {
       setIsLooping(false)
     }
     setRecordings((prev) => ({ ...prev, [track]: null }))
@@ -490,36 +493,39 @@ const App = () => {
     }
   }
 
-  const handleBassBoxClick = async (note) => {
+  const handleNoteBoxClick = async (track, note) => {
     await Tone.start()
+    const instrument = MONO_INSTRUMENTS[track]
 
-    if (currentBassNote === note) {
-      stopBassNote()
-      setCurrentBassNote('')
-      captureChange('bass', null)
+    if (currentNotes[track] === note) {
+      instrument.stop()
+      setCurrentNotes({ ...currentNotes, [track]: '' })
+      captureChange(track, null)
     } else {
-      // The bass is monophonic, so a new note glides straight on from the last
-      startBassNote(note)
-      setCurrentBassNote(note)
-      captureChange('bass', note)
+      // One note at a time, so a new note goes straight on from the last
+      instrument.start(note)
+      setCurrentNotes({ ...currentNotes, [track]: note })
+      captureChange(track, note)
     }
   }
 
   // A held note carries over to the new sound rather than cutting out
-  const changeBassTexture = (texture) => {
-    buildBass(texture)
-    setBassTexture(texture)
-    if (currentBassNote) {
-      startBassNote(currentBassNote)
+  const changeMonoTexture = (track, texture) => {
+    MONO_INSTRUMENTS[track].build(texture)
+    setMonoTextures({ ...monoTextures, [track]: texture })
+    if (currentNotes[track]) {
+      MONO_INSTRUMENTS[track].start(currentNotes[track])
     }
   }
 
-  const stopBass = () => {
-    if (currentBassNote) {
-      stopBassNote()
-      setCurrentBassNote('')
-      captureChange('bass', null)
-    }
+  const stopNotes = () => {
+    Object.entries(currentNotes).forEach(([track, note]) => {
+      if (note) {
+        MONO_INSTRUMENTS[track].stop()
+        captureChange(track, null)
+      }
+    })
+    setCurrentNotes(NO_NOTES)
   }
 
   // Whatever's sounding in the view being hidden stops, since its box won't
@@ -529,7 +535,7 @@ const App = () => {
       return
     }
     stopCurrentChord()
-    stopBass()
+    stopNotes()
     // A take only records the instrument it started on
     if (recorderState !== 'idle') {
       stopRecording()
@@ -586,7 +592,7 @@ const App = () => {
       setCurrentChord('')
       captureChordChange(null)
     }
-    stopBass()
+    stopNotes()
     const currentKeyIndex = keyOptions.indexOf(currentKey)
     if (direction === 'up') {
       if (currentKeyIndex + 1 === keyOptions.length) {
@@ -664,20 +670,21 @@ const App = () => {
             label='Instrument view'
             options={[
               { value: 'chords', label: 'Chords' },
-              { value: 'bass', label: 'Bass' }
+              { value: 'bass', label: 'Bass' },
+              { value: 'melody', label: 'Melody' }
             ]}
             value={view}
             onChange={changeView}
           />
 
-          {view === 'bass' && (
+          {MONO_INSTRUMENTS[view] && (
             <SegmentedControl
-              label='Bass sound'
-              options={Object.entries(BASS_TEXTURES).map(
+              label={`${view} sound`}
+              options={Object.entries(MONO_INSTRUMENTS[view].textures).map(
                 ([value, { label }]) => ({ value, label })
               )}
-              value={bassTexture}
-              onChange={changeBassTexture}
+              value={monoTextures[view]}
+              onChange={(texture) => changeMonoTexture(view, texture)}
             />
           )}
         </div>
@@ -688,10 +695,10 @@ const App = () => {
             handleSynthBoxClick={handleSynthBoxClick}
           />
         ) : (
-          <BassBoxContainer
-            bassNotes={bassNotesForKey(currentKey)}
-            currentBassNote={currentBassNote}
-            handleBassBoxClick={handleBassBoxClick}
+          <NoteBoxContainer
+            notes={MONO_INSTRUMENTS[view].notesForKey(currentKey)}
+            currentNote={currentNotes[view]}
+            handleNoteBoxClick={(note) => handleNoteBoxClick(view, note)}
           />
         )}
       </div>

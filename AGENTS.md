@@ -5,8 +5,8 @@ Guidance for AI coding agents working in this repository.
 ## Project overview
 
 Click-Chord is a browser music app. Users click boxes to play chords from a
-major key, play bass lines, build drum loops, record progressions into a
-quantized loop, and sample sounds from the microphone. It is a client-only
+major key, play bass lines and melodies, build drum loops, record progressions
+into a quantized loop, and sample sounds from the microphone. It is a client-only
 React 19 app built with Vite, and all audio goes through
 [Tone.js](https://tonejs.github.io/) (v15) on top of the Web Audio API. There
 is no backend.
@@ -40,7 +40,10 @@ src/app/main.jsx        App component: all top-level state, the Tone
                         transport, drum sequencer, loop playback, recording
 src/chords/chords.js    Builds chords for every key from scale theory;
                         owns the chord PolySynth / SampleInstrument
-src/bass/bass.js        Bass notes per key, bass synth textures, octave math
+src/mono-instrument/    Shared one-note-at-a-time instrument: notes per key,
+                        synth textures, octave math (instruments.js lists them)
+src/bass/bass.js        The bass: its register and sound textures
+src/melody/melody.js    The melody: its register and sound textures
 src/drums/drum-sounds.js  Drum voice factories (samples and synthesized)
 src/progression-recorder/quantize.js  Snaps recorded takes to a grid
 src/sampler/            Mic capture, pitch detection, loop-point finding,
@@ -77,7 +80,8 @@ src/<component>/        One folder per UI component:
   (see `setDrumVoice` and the `voice` helper in `drum-sounds.js`).
 - Schedule sounds with the `time` argument Tone passes to callbacks rather
   than `Tone.now()`, so playback stays in sync with the transport.
-- Chord roots are voiced between A2 and Ab3; bass tonics between E1 and Eb2.
+- Chord roots are voiced between A2 and Ab3; bass tonics between E1 and Eb2;
+  melody tonics between C4 and B4.
   Keep new notes inside these registers or the existing octave-range helpers.
 - Static audio files are loaded from `public/` with relative paths like
   `./kick-deep.wav`.

@@ -1,15 +1,20 @@
-import { bassOctaveRange } from '../bass/bass'
+import { MONO_INSTRUMENTS } from '../mono-instrument/instruments'
 
 export const BEATS_PER_BAR = 4
 
 const MIN_OCTAVE = -2
 const MAX_OCTAVE = 2
 
-// How far a step can be shifted by octaves
-export const octaveRange = (track, name) =>
-  track === 'bass'
-    ? bassOctaveRange(name, MAX_OCTAVE)
-    : { min: MIN_OCTAVE, max: MAX_OCTAVE }
+// How far a step can be shifted by octaves, kept within each single-note
+// instrument's range
+export const octaveRange = (track, name) => {
+  const instrument = MONO_INSTRUMENTS[track]
+  if (!instrument) {
+    return { min: MIN_OCTAVE, max: MAX_OCTAVE }
+  }
+  const { min, max } = instrument.octaveRange(name)
+  return { min: Math.max(MIN_OCTAVE, min), max: Math.min(MAX_OCTAVE, max) }
+}
 
 // Grid sizes in beats (quarter notes)
 export const QUANTIZE_GRIDS = [
@@ -22,7 +27,7 @@ export const QUANTIZE_GRIDS = [
 // Turns a raw recording ({ events, duration, bpm, loopUnit }, times in seconds
 // from the start of the take) into steps snapped to the grid, plus a loop
 // length in whole multiples of loopUnit beats (a bar unless the take was
-// recorded over a loop). Each event's name is a chord or a bass note, and a
+// recorded over a loop). Each event's name is a chord or a single note, and a
 // step with a null name is a rest. Each step keeps the index of the event it
 // came from, which stays stable across re-quantizing.
 export function quantizeRecording(recording, gridBeats) {
