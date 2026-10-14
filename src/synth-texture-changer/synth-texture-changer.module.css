@@ -5,30 +5,49 @@
   justify-content: center;
 }
 
-.textureOptionContainer {
+.menuAnchor {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.textureButton {
+  display: flex;
+  color: var(--blue);
+  border: 1px solid var(--blue);
+  font-family: var(--header-font);
+  background: var(--yellow);
+}
+
+.textureButton:hover {
+  background-color: var(--orange);
+}
+
+.textureMenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 1;
   display: grid;
   padding: 1rem;
   grid-template-rows: auto;
   grid-gap: 1rem;
   background-color: white;
   border-radius: 5px;
+  box-shadow: var(--shadow-1);
 }
 
 .textureOption {
+  display: flex;
   background-color: var(--yellow);
   font-family: var(--secondary-font);
   color: var(--blue);
   padding: 0.25rem;
   border: 1px solid var(--blue);
-  cursor: pointer;
   border-radius: 3px;
 }
 
 .textureOption:hover {
   background-color: var(--orange);
-  cursor: pointer;
-}
-
-.textureOption:focus {
-  outline: none;
 }

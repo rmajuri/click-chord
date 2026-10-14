@@ -3,6 +3,7 @@
   margin: 0 auto;
   background-color: var(--yellow);
   border-radius: 5px;
+  box-shadow: var(--shadow-2);
 }
 
 .appHeader {
@@ -13,6 +14,13 @@
   width: 100%;
   border-radius: 5px;
   text-align: center;
+  animation: fadeIn 3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
 }
 
 .appContainerCenter {

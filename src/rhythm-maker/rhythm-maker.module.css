@@ -15,6 +15,7 @@
 .container {
   grid-area: rhythmMaker;
   background-color: var(--teal);
+  box-shadow: var(--shadow-1);
   margin-top: 0;
   margin-bottom: calc(2.75rem + 1vmin);
   border-radius: 0 5px 5px 5px;
@@ -49,6 +50,18 @@
   color: inherit;
 }
 
+@media (max-width: 500px) {
+  .drumCheckbox {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (device-aspect-ratio: 40/71) {
+  .drumCheckbox {
+    font-size: 1.3rem;
+  }
+}
+
 .drumControlContainer {
   display: grid;
   grid-template-columns: 33.33% 33.33% 33.33%;
@@ -63,4 +76,160 @@
 .switchContainer {
   display: flex;
   justify-content: center;
+}
+
+.timeCountButton {
+  font-family: var(--secondary-font);
+  color: var(--blue);
+}
+
+.timeCountButton:hover {
+  background-color: rgba(48, 53, 149, 0.04);
+}
+
+.timeCountButton:active {
+  background-color: var(--orange);
+}
+
+.switchLabel {
+  display: inline-flex;
+  align-items: center;
+  margin-left: -11px;
+  margin-right: 16px;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.switch {
+  display: inline-flex;
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 58px;
+  height: 38px;
+  padding: 12px;
+  overflow: hidden;
+  z-index: 0;
+  vertical-align: middle;
+}
+
+.switchBase {
+  display: inline-flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 9px;
+  border-radius: 50%;
+  color: var(--orange);
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switchBase:has(.switchInput:checked) {
+  transform: translateX(20px);
+}
+
+.switchInput {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+.switchThumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: currentColor;
+  box-shadow: var(--shadow-1);
+}
+
+.switchInput:focus-visible + .switchThumb {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.switchTrack {
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  background-color: #000;
+  opacity: 0.38;
+  z-index: -1;
+  transition:
+    opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switchBase:has(.switchInput:checked) + .switchTrack {
+  background-color: var(--orange);
+  opacity: 0.5;
+}
+
+.switchText {
+  font-family: var(--header-font);
+  color: var(--blue);
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+
+.bpmInput {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  width: 3rem;
+  color: var(--blue);
+  font-family: var(--secondary-font);
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+}
+
+.bpmInput::before,
+.bpmInput::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.bpmInput::before {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.bpmInput:hover::before {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.87);
+}
+
+.bpmInput::after {
+  border-bottom: 2px solid var(--blue);
+  transform: scaleX(0);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.bpmInput:focus-within::after {
+  transform: scaleX(1);
+}
+
+.bpmInput input {
+  box-sizing: content-box;
+  width: 100%;
+  height: 1.4375em;
+  margin: 0;
+  padding: 4px 0 5px;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: currentColor;
+  font: inherit;
+  letter-spacing: inherit;
 }

@@ -1,19 +1,17 @@
-import { ArrowUpwardRounded, ArrowDownwardRounded } from '@mui/icons-material'
+import { ArrowUpIcon, ArrowDownIcon } from '../icons/icons'
 import styles from './key-changer.module.css'
 
 const KeyChanger = ({ currentKey, changedKeyHandler }) => {
   return (
     <div className={styles.currentKeyContainer}>
-      <ArrowUpwardRounded
-        fontSize='large'
+      <ArrowUpIcon
         className={styles.arrowIcon}
         onClick={() => changedKeyHandler('up')}
       />
 
       <h4 className={styles.currentKeyText}>{currentKey}</h4>
 
-      <ArrowDownwardRounded
-        fontSize='large'
+      <ArrowDownIcon
         className={styles.arrowIcon}
         onClick={() => changedKeyHandler('down')}
       />

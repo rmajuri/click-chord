@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import * as Tone from 'tone'
-import { Fade, Paper } from '@mui/material'
 import { majorScaleChords, buildChords } from '../chords/chords'
 import styles from './main.module.css'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
@@ -147,15 +146,9 @@ const App = () => {
 
   return Object.keys(majorScaleChords).length ? (
     <div>
-      <Paper
-        className={styles.headerContainer}
-        sx={{ background: 'var(--yellow)' }}
-        elevation={2}
-      >
-        <Fade in timeout={{ enter: 3000 }}>
-          <h1 className={styles.appHeader}>CLICK-CHORD</h1>
-        </Fade>
-      </Paper>
+      <div className={styles.headerContainer}>
+        <h1 className={styles.appHeader}>CLICK-CHORD</h1>
+      </div>
 
       <RhythmGrid
         handleTextureClick={changeTexture}
