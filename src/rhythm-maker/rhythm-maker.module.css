@@ -32,6 +32,13 @@
   width: 80%;
 }
 
+.drumTitle {
+  font-family: var(--secondary-font);
+  color: var(--blue);
+  padding-bottom: 5px;
+  text-transform: uppercase;
+}
+
 .drums {
   padding-left: 0.5rem;
   display: flex;
@@ -46,6 +53,10 @@
 @media (max-width: 500px) {
   .drumContainer {
     grid-template-columns: 3.5rem 1fr;
+  }
+
+  .drumTitle {
+    font-size: 0.8rem;
   }
 
   .drumCheckbox {

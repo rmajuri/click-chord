@@ -3,7 +3,7 @@ import styles from './synth-texture-changer.module.css'
 
 const synthTextures = ['Square', 'Triangle', 'Sawtooth', 'Sine']
 
-const TextureChanger = ({ handleTextureClick }) => {
+const TextureChanger = ({ handleTextureClick, hasSample }) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -33,6 +33,15 @@ const TextureChanger = ({ handleTextureClick }) => {
                 </button>
               )
             })}
+            <button
+              className={`button ${styles.textureOption}`}
+              type='button'
+              disabled={!hasSample}
+              title={hasSample ? undefined : 'Record a sample first'}
+              onClick={() => handleTextureClick('sample')}
+            >
+              Sample
+            </button>
           </div>
         )}
       </div>
