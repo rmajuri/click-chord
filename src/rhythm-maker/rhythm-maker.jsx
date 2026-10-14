@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   ClearRounded,
   StopRounded,
   FiberManualRecordRounded
-} from '@material-ui/icons'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/icons-material'
 import {
   Paper,
   Button,
@@ -12,14 +11,12 @@ import {
   Switch,
   FormGroup,
   FormControlLabel
-} from '@material-ui/core'
+} from '@mui/material'
 import styles from './rhythm-maker.module.css'
 
 const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   const [timeCount, setTimeCount] = useState(8)
   const [isSequencerOn, setIsSequencerOn] = useState(false)
-
-  const classes = useStyles()
 
   const toggleCheckedColor = (targetedInput) => {
     const clickedDrum = document.getElementById(`${targetedInput}`)
@@ -68,7 +65,8 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
           fontSize='large'
           key={`kick${i}`}
           id={`kick${i}`}
-          className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
+          className={styles.drumCheckbox}
+          sx={shapeIconStyle}
         />
       </div>
     )
@@ -86,7 +84,8 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
           fontSize='large'
           key={`hat${i}`}
           id={`hat${i}`}
-          className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
+          className={styles.drumCheckbox}
+          sx={shapeIconStyle}
         />
       </div>
     )
@@ -104,7 +103,8 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
           fontSize='large'
           key={`snare${i}`}
           id={`snare${i}`}
-          className={[styles.drumCheckbox, classes.shapeIcons].join(' ')}
+          className={styles.drumCheckbox}
+          sx={shapeIconStyle}
         />
       </div>
     )
@@ -113,20 +113,14 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   const sequencerLabel = !isSequencerOn ? 'Off' : 'On'
 
   return (
-    <Paper className={[styles.container, classes.root].join(' ')}>
+    <Paper className={styles.container} sx={{ background: 'var(--teal)' }}>
       <div className={styles.drumControlContainer}>
         <div>
-          <Button
-            className={classes.timeCountButton}
-            onClick={() => changeTimeCount(8)}
-          >
+          <Button sx={timeCountButtonStyle} onClick={() => changeTimeCount(8)}>
             4/4
           </Button>
 
-          <Button
-            className={classes.timeCountButton}
-            onClick={() => changeTimeCount(6)}
-          >
+          <Button sx={timeCountButtonStyle} onClick={() => changeTimeCount(6)}>
             6/8
           </Button>
         </div>
@@ -139,15 +133,11 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
                   checked={isSequencerOn}
                   onChange={handleSequencerToggle}
                   value='sequencerToggle'
-                  classes={{
-                    switchBase: classes.switch,
-                    checked: classes.checked,
-                    track: classes.track
-                  }}
+                  sx={switchStyle}
                 />
               }
               label={sequencerLabel}
-              classes={{ label: classes.switchLabel }}
+              sx={switchLabelStyle}
             />
           </FormGroup>
         </div>
@@ -155,10 +145,10 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
         <div className={styles.inputContainer}>
           <Input
             type='number'
-            className={classes.input}
+            sx={inputStyle}
             value={bpm}
             onChange={handleBpmChange}
-            inputProps={{ min: '10', max: '120', step: '1' }}
+            slotProps={{ input: { min: '10', max: '120', step: '1' } }}
           />
         </div>
       </div>
@@ -183,56 +173,43 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
   )
 }
 
-const useStyles = makeStyles({
-  root: {
-    background: 'var(--teal)'
+const shapeIconStyle = {
+  '@media (max-width: 500px)': {
+    fontSize: '1.5rem'
   },
-  shapeIcons: {
-    '@media(max-width: 500px)': {
-      fontSize: '1.5rem'
-    },
-    '@media screen and (device-aspect-ratio: 40/71)': {
-      fontSize: '1.3rem'
-    }
+  '@media screen and (device-aspect-ratio: 40/71)': {
+    fontSize: '1.3rem'
+  }
+}
+
+const inputStyle = {
+  width: '3rem',
+  color: 'var(--blue)',
+  fontFamily: 'var(--secondary-font)'
+}
+
+const switchStyle = {
+  '& .MuiSwitch-switchBase, & .MuiSwitch-switchBase.Mui-checked': {
+    color: 'var(--orange)'
   },
-  sequencerButton: {
-    color: 'var(--blue)',
-    border: '1px solid var(--blue)',
-    fontFamily: 'var(--header-font)',
-    margin: '.5rem auto',
-    display: 'flex',
-    '&:hover': {
-      color: 'var(--orange)',
-      border: '1px solid var(--orange)'
-    }
-  },
-  input: {
-    width: '3rem',
-    color: 'var(--blue)',
-    fontFamily: 'var(--secondary-font)'
-  },
-  switch: {
-    color: 'var(--orange)',
-    '&$checked': {
-      color: 'var(--orange)'
-    },
-    '&$checked + $track': {
-      backgroundColor: 'var(--orange)'
-    }
-  },
-  checked: {},
-  track: {},
-  switchLabel: {
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: 'var(--orange)'
+  }
+}
+
+const switchLabelStyle = {
+  '& .MuiFormControlLabel-label': {
     fontFamily: 'var(--header-font)',
     color: 'var(--blue)'
-  },
-  timeCountButton: {
-    fontFamily: 'var(--secondary-font)',
-    color: 'var(--blue)',
-    '&:active': {
-      backgroundColor: 'var(--orange)'
-    }
   }
-})
+}
+
+const timeCountButtonStyle = {
+  fontFamily: 'var(--secondary-font)',
+  color: 'var(--blue)',
+  '&:active': {
+    backgroundColor: 'var(--orange)'
+  }
+}
 
 export default RhythmMaker

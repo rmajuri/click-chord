@@ -1,4 +1,3 @@
-import React from 'react'
 import RhythmHeader from '../rhythm-headings-section/rhythm-headings-section'
 import RhythmMaker from '../rhythm-maker/rhythm-maker'
 import SynthTextureChanger from '../synth-texture-changer/synth-texture-changer'

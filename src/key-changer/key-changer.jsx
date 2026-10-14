@@ -1,5 +1,4 @@
-import React from 'react'
-import { ArrowUpwardRounded, ArrowDownwardRounded } from '@material-ui/icons'
+import { ArrowUpwardRounded, ArrowDownwardRounded } from '@mui/icons-material'
 import styles from './key-changer.module.css'
 
 const KeyChanger = ({ currentKey, changedKeyHandler }) => {

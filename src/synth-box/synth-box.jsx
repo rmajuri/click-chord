@@ -1,5 +1,3 @@
-import React from 'react'
-
 const SynthBox = ({ chordName, handleSynthBoxClick }) => {
   return (
     <div

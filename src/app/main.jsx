@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import Tone from 'tone'
-import { Fade, Paper } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { useState, useEffect } from 'react'
+import * as Tone from 'tone'
+import { Fade, Paper } from '@mui/material'
 import { majorScaleChords, buildChords } from '../chords/chords'
 import styles from './main.module.css'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 
-const Kick = new Tone.Buffer('./kick-deep.wav')
-const Hat = new Tone.Buffer('./hihat-808.wav')
-const Snare = new Tone.Buffer('./snare-analog.wav')
+const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
+const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
+const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
+const transport = Tone.getTransport()
+
+buildChords('square')
+transport.bpm.value = 95
+
+const stopDrumSequencer = () => {
+  transport.stop()
+  transport.cancel()
+}
 
 const App = () => {
   const [keyOptions] = useState([
@@ -27,24 +35,15 @@ const App = () => {
     'Bb',
     'B'
   ])
-  const [currentSynthTexture, setCurrentSynthTexture] = useState('')
-  const [currentKey, setCurrentKey] = useState('')
+  const [currentSynthTexture, setCurrentSynthTexture] = useState('square')
+  const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
-  const [bpm, setBpm] = useState(null)
+  const [bpm, setBpm] = useState(95)
 
-  const classes = useStyles()
-
-  useEffect(() => {
-    buildChords('square')
-    setCurrentSynthTexture('square')
-    setCurrentKey('C')
-    changeBpm(95)
-
-    return () => stopDrumSequencer()
-  }, [])
+  useEffect(() => stopDrumSequencer, [])
 
   const changeBpm = (bpmValue) => {
-    Tone.Transport.bpm.value = bpmValue
+    transport.bpm.value = Number(bpmValue)
     setBpm(bpmValue)
   }
 
@@ -57,7 +56,9 @@ const App = () => {
     }
   }
 
-  const handleSynthBoxClick = (chord) => {
+  const handleSynthBoxClick = async (chord) => {
+    await Tone.start()
+
     if (!currentChord) {
       majorScaleChords[currentKey][chord].start()
       setCurrentChord(chord)
@@ -83,10 +84,11 @@ const App = () => {
     }
   }
 
-  const startDrumSequencer = (count) => {
-    const kick = new Tone.Player(Kick).toMaster()
-    const snare = new Tone.Player(Snare).toMaster()
-    const hat = new Tone.Player(Hat).toMaster()
+  const startDrumSequencer = async (count) => {
+    await Tone.start()
+    const kick = new Tone.Player(Kick).toDestination()
+    const snare = new Tone.Player(Snare).toDestination()
+    const hat = new Tone.Player(Hat).toDestination()
     let index = 0
 
     const repeat = () => {
@@ -113,14 +115,8 @@ const App = () => {
       index++
     }
 
-    Tone.Transport.scheduleRepeat(repeat, `${count}n`)
-    Tone.Transport.start('+0.1')
-  }
-
-  const stopDrumSequencer = () => {
-    Tone.Transport.stop()
-    Tone.Transport.cancel()
-    Tone.Transport.clear()
+    transport.scheduleRepeat(repeat, `${count}n`)
+    transport.start('+0.1')
   }
 
   const changedKeyHandler = (direction) => {
@@ -152,7 +148,8 @@ const App = () => {
   return Object.keys(majorScaleChords).length ? (
     <div>
       <Paper
-        className={[styles.headerContainer, classes.root].join(' ')}
+        className={styles.headerContainer}
+        sx={{ background: 'var(--yellow)' }}
         elevation={2}
       >
         <Fade in timeout={{ enter: 3000 }}>
@@ -194,11 +191,5 @@ const App = () => {
     </div>
   ) : null
 }
-
-const useStyles = makeStyles({
-  root: {
-    background: 'var(--yellow)'
-  }
-})
 
 export default App

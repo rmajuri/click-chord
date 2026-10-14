@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
-import { Popper, Paper, Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { useState } from 'react'
+import { Popper, Paper, Button } from '@mui/material'
 import styles from './synth-texture-changer.module.css'
 
 const TextureChanger = ({ handleTextureClick }) => {
   const [anchorEl, setAnhorEl] = useState(null)
   const [synthTextures] = useState(['Square', 'Triangle', 'Sawtooth', 'Sine'])
-
-  const classes = useStyles()
 
   const open = Boolean(anchorEl)
 
@@ -23,7 +20,7 @@ const TextureChanger = ({ handleTextureClick }) => {
       <Button
         type='button'
         aria-describedby='Synth Texture Change Button'
-        className={classes.root}
+        sx={buttonStyle}
         onClick={handleSynthTextureButtonClick}
       >
         Change Synth Texture
@@ -33,15 +30,14 @@ const TextureChanger = ({ handleTextureClick }) => {
         id='synthTextureChanger'
         open={open}
         anchorEl={anchorEl}
-        transition
         placement='bottom'
       >
         <Paper className={styles.textureOptionContainer}>
-          {synthTextures.map((texture, i) => {
+          {synthTextures.map((texture) => {
             return (
               <Button
                 key={texture}
-                className={classes.secondaryButton}
+                sx={secondaryButtonStyle}
                 type='button'
                 onClick={() => handleTextureClick(texture.toLowerCase())}
               >
@@ -55,30 +51,29 @@ const TextureChanger = ({ handleTextureClick }) => {
   )
 }
 
-const useStyles = makeStyles({
-  root: {
-    color: 'var(--blue)',
-    border: '1px solid var(--blue)',
-    fontFamily: 'var(--header-font)',
-    background: 'var(--yellow)',
-    marginBottom: '1rem',
-    '&:hover': {
-      backgroundColor: 'var(--orange)',
-      cursor: 'pointer'
-    }
-  },
-  secondaryButton: {
-    backgroundColor: 'var(--yellow)',
-    fontFamily: 'var(--secondary-font)',
-    color: 'var(--blue)',
-    padding: '.25rem',
-    border: `1px solid var(--blue)`,
-    cursor: 'pointer',
-    borderRadius: '3px',
-    '&:hover': {
-      backgroundColor: 'var(--orange)'
-    }
+const buttonStyle = {
+  color: 'var(--blue)',
+  border: '1px solid var(--blue)',
+  fontFamily: 'var(--header-font)',
+  background: 'var(--yellow)',
+  marginBottom: '1rem',
+  '&:hover': {
+    backgroundColor: 'var(--orange)',
+    cursor: 'pointer'
   }
-})
+}
+
+const secondaryButtonStyle = {
+  backgroundColor: 'var(--yellow)',
+  fontFamily: 'var(--secondary-font)',
+  color: 'var(--blue)',
+  padding: '.25rem',
+  border: '1px solid var(--blue)',
+  cursor: 'pointer',
+  borderRadius: '3px',
+  '&:hover': {
+    backgroundColor: 'var(--orange)'
+  }
+}
 
 export default TextureChanger

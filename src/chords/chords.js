@@ -1,4 +1,4 @@
-import Tone from 'tone'
+import * as Tone from 'tone'
 
 let synth
 
@@ -6,12 +6,16 @@ export const majorScaleChords = {}
 
 export function buildChords(synthTexture) {
   const volume = synthTexture === 'sine' || synthTexture === 'triangle' ? 1 : -2
-  synth = new Tone.PolySynth(6, Tone.Synth, {
-    volume: volume,
+  if (synth) {
+    synth.dispose()
+  }
+  synth = new Tone.PolySynth(Tone.Synth, {
     oscillator: {
       type: synthTexture
     }
-  }).toMaster()
+  }).toDestination()
+  synth.maxPolyphony = 6
+  synth.volume.value = volume
 
   class chordObj {
     constructor() {
