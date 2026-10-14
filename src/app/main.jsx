@@ -6,10 +6,11 @@ import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 import ProgressionRecorder from '../progression-recorder/progression-recorder'
-import ViewToggle from '../view-toggle/view-toggle'
+import SegmentedControl from '../segmented-control/segmented-control'
 import BassBoxContainer from '../bass-box-container/bass-box-container'
 import {
   buildBass,
+  BASS_TEXTURES,
   bassNotesForKey,
   startBassNote,
   stopBassNote
@@ -26,7 +27,7 @@ const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
 const transport = Tone.getTransport()
 
 buildChords('square')
-buildBass('square')
+buildBass('round')
 transport.bpm.value = 95
 
 // The drum sequencer and the progression loop share the transport, so each
@@ -115,6 +116,7 @@ const App = () => {
   const [currentChord, setCurrentChord] = useState('')
   const [view, setView] = useState('chords')
   const [currentBassNote, setCurrentBassNote] = useState('')
+  const [bassTexture, setBassTexture] = useState('round')
   const [bpm, setBpm] = useState(95)
   const [recorderState, setRecorderState] = useState('idle')
   const [recording, setRecording] = useState(null)
@@ -229,13 +231,8 @@ const App = () => {
   }
 
   const changeTexture = (synthTexture) => {
-    if (
-      !currentChord &&
-      !currentBassNote &&
-      currentSynthTexture !== synthTexture
-    ) {
+    if (!currentChord && currentSynthTexture !== synthTexture) {
       buildChords(synthTexture)
-      buildBass(synthTexture)
       setCurrentSynthTexture(synthTexture)
 
       return () => stopDrumSequencer()
@@ -283,6 +280,15 @@ const App = () => {
       // The bass is monophonic, so a new note glides straight on from the last
       startBassNote(note)
       setCurrentBassNote(note)
+    }
+  }
+
+  // A held note carries over to the new sound rather than cutting out
+  const changeBassTexture = (texture) => {
+    buildBass(texture)
+    setBassTexture(texture)
+    if (currentBassNote) {
+      startBassNote(currentBassNote)
     }
   }
 
@@ -417,7 +423,28 @@ const App = () => {
           currentKey={currentKey}
         />
 
-        <ViewToggle view={view} onViewChange={changeView} />
+        <div className={styles.viewControls}>
+          <SegmentedControl
+            label='Instrument view'
+            options={[
+              { value: 'chords', label: 'Chords' },
+              { value: 'bass', label: 'Bass' }
+            ]}
+            value={view}
+            onChange={changeView}
+          />
+
+          {view === 'bass' && (
+            <SegmentedControl
+              label='Bass sound'
+              options={Object.entries(BASS_TEXTURES).map(
+                ([value, { label }]) => ({ value, label })
+              )}
+              value={bassTexture}
+              onChange={changeBassTexture}
+            />
+          )}
+        </div>
 
         {view === 'chords' ? (
           <SynthBoxContainer

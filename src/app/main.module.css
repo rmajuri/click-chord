@@ -39,3 +39,18 @@
     font-size: calc(2.5rem + 2vmin);
   }
 }
+
+.viewControls {
+  grid-area: toggle;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 500px) {
+  .viewControls {
+    justify-content: center;
+  }
+}

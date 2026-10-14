@@ -1,8 +1,6 @@
-.toggle {
-  grid-area: toggle;
+.control {
   display: inline-flex;
-  justify-self: start;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
   border: 1px solid var(--blue);
   border-radius: 5px;
   overflow: hidden;
@@ -21,10 +19,4 @@
 
 .selected {
   background-color: var(--yellow);
-}
-
-@media (max-width: 500px) {
-  .toggle {
-    justify-self: center;
-  }
 }
