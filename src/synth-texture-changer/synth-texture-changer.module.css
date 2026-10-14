@@ -48,6 +48,11 @@
   border-radius: 3px;
 }
 
-.textureOption:hover {
+.textureOption:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.textureOption:hover:not(:disabled) {
   background-color: var(--orange);
 }

@@ -16,6 +16,7 @@ const Sampler = ({
   samplerState,
   hasSample,
   sampleLength,
+  sampleNote,
   onRecord,
   onStopRecording,
   onPlay,
@@ -25,7 +26,9 @@ const Sampler = ({
   const isBusy = samplerState === 'requesting' || samplerState === 'processing'
   const status =
     samplerState === 'idle' && hasSample
-      ? `${sampleLength.toFixed(2)}s sample ready`
+      ? `${sampleLength.toFixed(2)}s sample ready, ${
+          sampleNote ? `pitch ${sampleNote}` : 'no clear pitch (tuned as C)'
+        }. Pick Sample under Change Synth Texture to play chords with it`
       : statusText[samplerState]
 
   return (

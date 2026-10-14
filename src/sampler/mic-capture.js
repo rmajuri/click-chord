@@ -1,4 +1,5 @@
 import * as Tone from 'tone'
+import { detectPitch } from './detect-pitch'
 
 export const MAX_SAMPLE_SECONDS = 4
 
@@ -13,7 +14,8 @@ export const isMicSupported = () =>
   typeof MediaRecorder !== 'undefined'
 
 // Opens the device mic and starts recording. Resolves to a stop function that
-// releases the mic and resolves to the take as a ToneAudioBuffer
+// releases the mic and resolves to the take as { buffer, frequency }, where
+// frequency is the detected pitch in Hz or null
 export const startMicCapture = async () => {
   const stream = await navigator.mediaDevices.getUserMedia({
     audio: {
@@ -45,7 +47,8 @@ export const startMicCapture = async () => {
     const audioBuffer = await Tone.getContext().rawContext.decodeAudioData(
       await blob.arrayBuffer()
     )
-    return trimLeadingSilence(new Tone.ToneAudioBuffer(audioBuffer))
+    const buffer = trimLeadingSilence(new Tone.ToneAudioBuffer(audioBuffer))
+    return { buffer, frequency: detectPitch(buffer) }
   }
 }
 
