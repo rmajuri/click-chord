@@ -6,7 +6,11 @@ import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 import ProgressionRecorder from '../progression-recorder/progression-recorder'
-import { quantizeRecording } from '../progression-recorder/quantize'
+import {
+  quantizeRecording,
+  MIN_OCTAVE,
+  MAX_OCTAVE
+} from '../progression-recorder/quantize'
 
 const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
 const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
@@ -35,15 +39,26 @@ const stopDrumSequencer = () => {
   stopTransportIfIdle()
 }
 
-const startLoop = (progression, onStep) => {
+// Octaves are read as each step plays, so changing one doesn't restart the loop
+const startLoop = (progression, getOctave, onStep) => {
   const ticksPerBeat = transport.PPQ
   let sounding = null
 
+  const stopSounding = (time) => {
+    sounding?.chord.stop(time, sounding.octave)
+    sounding = null
+  }
+
   loopPart = new Tone.Part(
     (time, step) => {
-      sounding?.stop(time)
-      sounding = step.chord ? majorScaleChords[step.key][step.chord] : null
-      sounding?.start(time)
+      stopSounding(time)
+      if (step.chord) {
+        sounding = {
+          chord: majorScaleChords[step.key][step.chord],
+          octave: getOctave(step.eventIndex)
+        }
+        sounding.chord.start(time, sounding.octave)
+      }
       Tone.getDraw().schedule(() => onStep(step.index), time)
     },
     progression.steps.map((step, index) => ({
@@ -66,7 +81,7 @@ const startLoop = (progression, onStep) => {
   return () => {
     loopPart.dispose()
     loopPart = null
-    sounding?.stop()
+    stopSounding()
     stopTransportIfIdle()
   }
 }
@@ -95,7 +110,9 @@ const App = () => {
   const [grid, setGrid] = useState(1)
   const [isLooping, setIsLooping] = useState(false)
   const [playingStep, setPlayingStep] = useState(-1)
+  const [octaves, setOctaves] = useState({})
   const recordingRef = useRef(null)
+  const octavesRef = useRef(octaves)
 
   const progression = useMemo(
     () => quantizeRecording(recording, grid),
@@ -114,7 +131,11 @@ const App = () => {
     if (!isLooping || !progression) {
       return
     }
-    const stopLoop = startLoop(progression, setPlayingStep)
+    const stopLoop = startLoop(
+      progression,
+      (eventIndex) => octavesRef.current[eventIndex] ?? 0,
+      setPlayingStep
+    )
     return () => {
       stopLoop()
       setPlayingStep(-1)
@@ -153,6 +174,7 @@ const App = () => {
     recordingRef.current = null
     setRecorderState('idle')
     if (rec?.startTime !== null && rec?.events.length) {
+      updateOctaves({})
       setRecording({
         events: rec.events,
         duration: performance.now() / 1000 - rec.startTime,
@@ -174,6 +196,20 @@ const App = () => {
   const clearRecording = () => {
     setIsLooping(false)
     setRecording(null)
+    updateOctaves({})
+  }
+
+  function updateOctaves(next) {
+    octavesRef.current = next
+    setOctaves(next)
+  }
+
+  const changeStepOctave = (eventIndex, direction) => {
+    const octave = Math.min(
+      MAX_OCTAVE,
+      Math.max(MIN_OCTAVE, (octaves[eventIndex] ?? 0) + direction)
+    )
+    updateOctaves({ ...octaves, [eventIndex]: octave })
   }
 
   const changeBpm = (bpmValue) => {
@@ -314,6 +350,8 @@ const App = () => {
         onGridChange={setGrid}
         progression={progression}
         playingStep={playingStep}
+        octaves={octaves}
+        onOctaveChange={changeStepOctave}
       />
 
       <div className={styles.appContainerCenter}>

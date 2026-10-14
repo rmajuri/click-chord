@@ -1,4 +1,5 @@
-import { QUANTIZE_GRIDS } from './quantize'
+import { QUANTIZE_GRIDS, MIN_OCTAVE, MAX_OCTAVE } from './quantize'
+import { ArrowUpIcon, ArrowDownIcon } from '../icons/icons'
 import styles from './progression-recorder.module.css'
 
 const statusText = {
@@ -16,7 +17,9 @@ const ProgressionRecorder = ({
   grid,
   onGridChange,
   progression,
-  playingStep
+  playingStep,
+  octaves,
+  onOctaveChange
 }) => {
   const isRecording = recorderState !== 'idle'
 
@@ -73,17 +76,46 @@ const ProgressionRecorder = ({
         {isRecording ? (
           <p className={styles.status}>{statusText[recorderState]}</p>
         ) : progression ? (
-          progression.steps.map((step, i) => (
-            <div
-              key={`${step.beat}-${step.chord}`}
-              className={`${styles.step} ${
-                step.chord ? '' : styles.restStep
-              } ${playingStep === i ? styles.playingStep : ''}`}
-              style={{ flexGrow: step.duration }}
-            >
-              {step.chord ?? 'Rest'}
-            </div>
-          ))
+          progression.steps.map((step, i) => {
+            const octave = octaves[step.eventIndex] ?? 0
+
+            return (
+              <div
+                key={`${step.beat}-${step.chord}`}
+                className={`${styles.step} ${
+                  step.chord ? '' : styles.restStep
+                } ${playingStep === i ? styles.playingStep : ''}`}
+                style={{ flexGrow: step.duration }}
+              >
+                <span className={styles.stepName}>{step.chord ?? 'Rest'}</span>
+                {step.chord && (
+                  <span className={styles.octaveControls}>
+                    <button
+                      type='button'
+                      className={styles.octaveButton}
+                      aria-label={`Lower ${step.chord} an octave`}
+                      disabled={octave <= MIN_OCTAVE}
+                      onClick={() => onOctaveChange(step.eventIndex, -1)}
+                    >
+                      <ArrowDownIcon />
+                    </button>
+                    <span className={styles.octaveValue}>
+                      {octave > 0 ? `+${octave}` : octave}
+                    </span>
+                    <button
+                      type='button'
+                      className={styles.octaveButton}
+                      aria-label={`Raise ${step.chord} an octave`}
+                      disabled={octave >= MAX_OCTAVE}
+                      onClick={() => onOctaveChange(step.eventIndex, 1)}
+                    >
+                      <ArrowUpIcon />
+                    </button>
+                  </span>
+                )}
+              </div>
+            )
+          })
         ) : (
           <p className={styles.status}>
             Hit record and play a progression to loop it

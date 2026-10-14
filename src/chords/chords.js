@@ -91,16 +91,20 @@ export function buildChords(synthTexture) {
   synth.volume.value = volume
 
   class chordObj {
-    constructor(notes) {
-      this.notes = notes
+    constructor(midis) {
+      this.midis = midis
     }
 
-    start(time = '+0.01') {
-      synth.triggerAttack(this.notes, time, 0.3)
+    notes(octave) {
+      return this.midis.map((midi) => midiToNote(midi + octave * 12))
     }
 
-    stop(time = '+0.01') {
-      synth.triggerRelease(this.notes, time)
+    start(time = '+0.01', octave = 0) {
+      synth.triggerAttack(this.notes(octave), time, 0.3)
+    }
+
+    stop(time = '+0.01', octave = 0) {
+      synth.triggerRelease(this.notes(octave), time)
     }
   }
 
@@ -112,11 +116,9 @@ export function buildChords(synthTexture) {
       const root = rootMidi(pitchClass)
 
       types.forEach((type) => {
-        const notes = CHORD_TYPES[type].map((interval) =>
-          midiToNote(root + interval)
-        )
+        const midis = CHORD_TYPES[type].map((interval) => root + interval)
         majorScaleChords[key][`${NOTE_NAMES[pitchClass]}${type}`] =
-          new chordObj(notes)
+          new chordObj(midis)
       })
     })
   })

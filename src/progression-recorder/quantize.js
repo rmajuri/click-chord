@@ -1,5 +1,8 @@
 export const BEATS_PER_BAR = 4
 
+export const MIN_OCTAVE = -2
+export const MAX_OCTAVE = 2
+
 // Grid sizes in beats (quarter notes)
 export const QUANTIZE_GRIDS = [
   { label: '1 Bar', beats: 4 },
@@ -10,7 +13,8 @@ export const QUANTIZE_GRIDS = [
 
 // Turns a raw recording ({ events, duration, bpm }, times in seconds from the
 // first chord) into steps snapped to the grid, plus a loop length in whole bars.
-// A step with a null chord is a rest.
+// A step with a null chord is a rest. Each step keeps the index of the event
+// it came from, which stays stable across re-quantizing.
 export function quantizeRecording(recording, gridBeats) {
   if (!recording || !recording.events.length) {
     return null
@@ -22,20 +26,20 @@ export function quantizeRecording(recording, gridBeats) {
 
   // When several changes land on the same grid slot, the last one wins
   const slots = new Map()
-  events.forEach(({ time, chord, key }) => {
-    slots.set(snap(toBeats(time)), { chord, key })
+  events.forEach(({ time, chord, key }, eventIndex) => {
+    slots.set(snap(toBeats(time)), { chord, key, eventIndex })
   })
 
   const steps = []
   ;[...slots.entries()]
     .sort(([a], [b]) => a - b)
-    .forEach(([beat, { chord, key }]) => {
+    .forEach(([beat, { chord, key, eventIndex }]) => {
       const prev = steps.at(-1)
       const unchanged = prev
         ? prev.chord === chord && prev.key === key
         : chord === null
       if (!unchanged) {
-        steps.push({ beat, chord, key })
+        steps.push({ beat, chord, key, eventIndex })
       }
     })
 

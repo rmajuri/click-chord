@@ -85,16 +85,57 @@
   flex-basis: 0;
   min-width: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 0.25rem;
+  padding: 0.25rem;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis;
   border-radius: 4px;
   background-color: var(--blue);
   color: var(--yellow);
   transition: background-color 100ms linear;
+}
+
+.stepName {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.octaveControls {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.75rem;
+}
+
+.octaveButton {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.octaveButton svg {
+  font-size: 1rem;
+}
+
+.octaveButton:hover:not(:disabled) {
+  color: var(--orange);
+}
+
+.octaveButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.octaveValue {
+  min-width: 1.2rem;
+  text-align: center;
 }
 
 .restStep {
@@ -106,6 +147,10 @@
 .playingStep {
   background-color: var(--orange);
   color: var(--blue);
+}
+
+.playingStep .octaveButton:hover:not(:disabled) {
+  color: white;
 }
 
 .loopLength {
