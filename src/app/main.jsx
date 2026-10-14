@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import * as Tone from 'tone'
 import { majorScaleChords, buildChords } from '../chords/chords'
 import styles from './main.module.css'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
+import ProgressionRecorder from '../progression-recorder/progression-recorder'
+import { quantizeRecording } from '../progression-recorder/quantize'
 
 const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
 const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
@@ -14,9 +16,59 @@ const transport = Tone.getTransport()
 buildChords('square')
 transport.bpm.value = 95
 
+// The drum sequencer and the progression loop share the transport, so each
+// only stops it when the other isn't using it
+let drumRepeatId = null
+let loopPart = null
+
+const stopTransportIfIdle = () => {
+  if (drumRepeatId === null && loopPart === null) {
+    transport.stop()
+  }
+}
+
 const stopDrumSequencer = () => {
-  transport.stop()
-  transport.cancel()
+  if (drumRepeatId !== null) {
+    transport.clear(drumRepeatId)
+    drumRepeatId = null
+  }
+  stopTransportIfIdle()
+}
+
+const startLoop = (progression, onStep) => {
+  const ticksPerBeat = transport.PPQ
+  let sounding = null
+
+  loopPart = new Tone.Part(
+    (time, step) => {
+      sounding?.stop(time)
+      sounding = step.chord ? majorScaleChords[step.key][step.chord] : null
+      sounding?.start(time)
+      Tone.getDraw().schedule(() => onStep(step.index), time)
+    },
+    progression.steps.map((step, index) => ({
+      ...step,
+      index,
+      time: `${step.beat * ticksPerBeat}i`
+    }))
+  )
+  loopPart.loop = true
+  loopPart.loopEnd = `${progression.loopBeats * ticksPerBeat}i`
+
+  if (transport.state === 'started') {
+    // Drums are already running, so come in on the next bar
+    loopPart.start('@1m')
+  } else {
+    loopPart.start(0)
+    transport.start('+0.1')
+  }
+
+  return () => {
+    loopPart.dispose()
+    loopPart = null
+    sounding?.stop()
+    stopTransportIfIdle()
+  }
 }
 
 const App = () => {
@@ -38,8 +90,91 @@ const App = () => {
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
   const [bpm, setBpm] = useState(95)
+  const [recorderState, setRecorderState] = useState('idle')
+  const [recording, setRecording] = useState(null)
+  const [grid, setGrid] = useState(1)
+  const [isLooping, setIsLooping] = useState(false)
+  const [playingStep, setPlayingStep] = useState(-1)
+  const recordingRef = useRef(null)
 
-  useEffect(() => stopDrumSequencer, [])
+  const progression = useMemo(
+    () => quantizeRecording(recording, grid),
+    [recording, grid]
+  )
+
+  useEffect(
+    () => () => {
+      transport.stop()
+      transport.cancel()
+    },
+    []
+  )
+
+  useEffect(() => {
+    if (!isLooping || !progression) {
+      return
+    }
+    const stopLoop = startLoop(progression, setPlayingStep)
+    return () => {
+      stopLoop()
+      setPlayingStep(-1)
+    }
+  }, [isLooping, progression])
+
+  // Times are measured from the first chord played after hitting record, so
+  // there's no pressure to come in on a count
+  const captureChordChange = (chord, key = currentKey) => {
+    const rec = recordingRef.current
+    if (!rec) {
+      return
+    }
+    const now = performance.now() / 1000
+    if (rec.startTime === null) {
+      if (!chord) {
+        return
+      }
+      rec.startTime = now
+      setRecorderState('recording')
+    }
+    rec.events.push({ time: now - rec.startTime, chord, key })
+  }
+
+  const startRecording = async () => {
+    await Tone.start()
+    recordingRef.current = { startTime: null, events: [] }
+    setRecorderState('armed')
+    if (currentChord) {
+      captureChordChange(currentChord)
+    }
+  }
+
+  const stopRecording = () => {
+    const rec = recordingRef.current
+    recordingRef.current = null
+    setRecorderState('idle')
+    if (rec?.startTime !== null && rec?.events.length) {
+      setRecording({
+        events: rec.events,
+        duration: performance.now() / 1000 - rec.startTime,
+        bpm: transport.bpm.value
+      })
+    }
+  }
+
+  const toggleLoop = async () => {
+    await Tone.start()
+    if (!isLooping && currentChord) {
+      majorScaleChords[currentKey][currentChord].stop()
+      document.getElementById(currentChord).classList.remove('synthBoxPlaying')
+      setCurrentChord('')
+    }
+    setIsLooping(!isLooping)
+  }
+
+  const clearRecording = () => {
+    setIsLooping(false)
+    setRecording(null)
+  }
 
   const changeBpm = (bpmValue) => {
     transport.bpm.value = Number(bpmValue)
@@ -61,6 +196,7 @@ const App = () => {
     if (!currentChord) {
       majorScaleChords[currentKey][chord].start()
       setCurrentChord(chord)
+      captureChordChange(chord)
       const chordPlaying = document.getElementById(chord)
       chordPlaying.classList.add('synthBoxPlaying')
     }
@@ -68,6 +204,7 @@ const App = () => {
     if (currentChord === chord) {
       majorScaleChords[currentKey][chord].stop()
       setCurrentChord('')
+      captureChordChange(null)
       const chordPlaying = document.getElementById(chord)
       chordPlaying.classList.remove('synthBoxPlaying')
     }
@@ -78,6 +215,7 @@ const App = () => {
       chordPlaying.classList.remove('synthBoxPlaying')
       majorScaleChords[currentKey][chord].start()
       setCurrentChord(chord)
+      captureChordChange(chord)
       const newChord = document.getElementById(chord)
       newChord.classList.add('synthBoxPlaying')
     }
@@ -88,10 +226,14 @@ const App = () => {
     const kick = new Tone.Player(Kick).toDestination()
     const snare = new Tone.Player(Snare).toDestination()
     const hat = new Tone.Player(Hat).toDestination()
-    let index = 0
+    const stepTicks = Tone.Time(`${count}n`).toTicks()
 
-    const repeat = () => {
-      const step = count ? index % count : 8
+    // Step from the transport position rather than a counter so the drums
+    // stay on the bar when the transport is already running for the loop
+    const repeat = (time) => {
+      const step = count
+        ? Math.round(transport.getTicksAtTime(time) / stepTicks) % count
+        : 8
       const kickClasses = [
         ...document.getElementById(`kickParent${step}`).classList
       ]
@@ -111,11 +253,13 @@ const App = () => {
       if (hatClasses.includes('iconParentPlaying')) {
         hat.start()
       }
-      index++
     }
 
-    transport.scheduleRepeat(repeat, `${count}n`)
-    transport.start('+0.1')
+    stopDrumSequencer()
+    drumRepeatId = transport.scheduleRepeat(repeat, `${count}n`)
+    if (transport.state !== 'started') {
+      transport.start('+0.1')
+    }
   }
 
   const changedKeyHandler = (direction) => {
@@ -124,6 +268,7 @@ const App = () => {
       const chordPlaying = document.getElementById(currentChord)
       chordPlaying.className = 'synthBox'
       setCurrentChord('')
+      captureChordChange(null)
     }
     const currentKeyIndex = keyOptions.indexOf(currentKey)
     if (direction === 'up') {
@@ -156,6 +301,19 @@ const App = () => {
         stopSequencer={stopDrumSequencer}
         changeBpm={changeBpm}
         bpm={bpm}
+      />
+
+      <ProgressionRecorder
+        recorderState={recorderState}
+        onRecord={startRecording}
+        onStopRecording={stopRecording}
+        isLooping={isLooping}
+        onToggleLoop={toggleLoop}
+        onClear={clearRecording}
+        grid={grid}
+        onGridChange={setGrid}
+        progression={progression}
+        playingStep={playingStep}
       />
 
       <div className={styles.appContainerCenter}>

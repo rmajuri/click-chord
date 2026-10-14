@@ -95,12 +95,12 @@ export function buildChords(synthTexture) {
       this.notes = notes
     }
 
-    start() {
-      synth.triggerAttack(this.notes, '+0.01', 0.3)
+    start(time = '+0.01') {
+      synth.triggerAttack(this.notes, time, 0.3)
     }
 
-    stop() {
-      synth.triggerRelease(this.notes, '+0.01')
+    stop(time = '+0.01') {
+      synth.triggerRelease(this.notes, time)
     }
   }
 
