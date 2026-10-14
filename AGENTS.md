@@ -53,7 +53,8 @@ src/sampler/            Mic capture, pitch detection, loop-point finding,
                         and SampleInstrument (plays chords from a sample)
 src/drawsound/          Drawsound page: drawing analysis, composition,
                         mappings (creative rules), Tone playback and WAV
-                        export, its components, and *.test.js unit tests
+                        export, its components, and *.test.js unit tests.
+                        Has its own AGENTS.md
 e2e/                    Playwright tests
 src/<component>/        One folder per UI component:
                         <name>.jsx + <name>.module.css
