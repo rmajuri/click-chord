@@ -46,21 +46,23 @@ const CHORD_TYPES = {
   5: [0, 7]
 }
 
-// Each entry is a chord root (semitones above the tonic) and the chord types
-// built on it. Order here is the order the chord boxes render in.
+// Each entry is a chord root (semitones above the tonic), the chord types
+// built on it, and the types that also get inversions (rendered as slash
+// chords right after the root position chord). Order here is the order the
+// chord boxes render in.
 const MAJOR_KEY_CHORDS = [
   // I
-  [0, ['', 'Maj7', 'Maj9', 'add9', '6', '6/9', 'sus2', 'sus4', '5']],
+  [0, ['', 'Maj7', 'Maj9', 'add9', '6', '6/9', 'sus2', 'sus4', '5'], ['']],
   // ii
-  [2, ['m', 'm7', 'm9', 'madd9', 'm11', '5']],
+  [2, ['m', 'm7', 'm9', 'madd9', 'm11', '5'], ['m']],
   // iii
-  [4, ['m', 'm7', '5']],
+  [4, ['m', 'm7', '5'], ['m']],
   // IV
-  [5, ['', 'Maj7', 'Maj9', 'add9', '6', 'Maj7#11', '5']],
+  [5, ['', 'Maj7', 'Maj9', 'add9', '6', 'Maj7#11', '5'], ['']],
   // V
-  [7, ['', '7', '9', 'add9', '6', 'sus4', '7sus4', '5']],
+  [7, ['', '7', '9', 'add9', '6', 'sus4', '7sus4', '5'], ['', '7']],
   // vi
-  [9, ['m', 'm7', 'm9', 'madd9', 'm11', '5']],
+  [9, ['m', 'm7', 'm9', 'madd9', 'm11', '5'], ['m']],
   // vii
   [11, ['dim', 'm7b5']],
   // Borrowed and secondary dominant chords: II7 (V/V), III7 (V/vi), iv, bVI, bVII
@@ -76,6 +78,13 @@ const midiToNote = (midi) =>
 
 const rootMidi = (pitchClass) =>
   LOWEST_ROOT_MIDI + ((pitchClass - (LOWEST_ROOT_MIDI % 12) + 12) % 12)
+
+// Rotates the lowest `inversion` chord tones up an octave so the chord tone at
+// that index becomes the bass note
+const invert = (intervals, inversion) => [
+  ...intervals.slice(inversion),
+  ...intervals.slice(0, inversion).map((interval) => interval + 12)
+]
 
 export function buildChords(synthTexture) {
   const volume = synthTexture === 'sine' || synthTexture === 'triangle' ? 1 : -2
@@ -107,16 +116,23 @@ export function buildChords(synthTexture) {
   NOTE_NAMES.forEach((key, tonic) => {
     majorScaleChords[key] = {}
 
-    MAJOR_KEY_CHORDS.forEach(([offset, types]) => {
+    MAJOR_KEY_CHORDS.forEach(([offset, types, invertedTypes = []]) => {
       const pitchClass = (tonic + offset) % 12
       const root = rootMidi(pitchClass)
 
       types.forEach((type) => {
-        const notes = CHORD_TYPES[type].map((interval) =>
-          midiToNote(root + interval)
-        )
-        majorScaleChords[key][`${NOTE_NAMES[pitchClass]}${type}`] =
-          new chordObj(notes)
+        const name = `${NOTE_NAMES[pitchClass]}${type}`
+        const intervals = CHORD_TYPES[type]
+        const inversions = invertedTypes.includes(type) ? intervals.length : 1
+
+        for (let inversion = 0; inversion < inversions; inversion++) {
+          const bass = NOTE_NAMES[(pitchClass + intervals[inversion]) % 12]
+          const notes = invert(intervals, inversion).map((interval) =>
+            midiToNote(root + interval)
+          )
+          majorScaleChords[key][inversion ? `${name}/${bass}` : name] =
+            new chordObj(notes)
+        }
       })
     })
   })
