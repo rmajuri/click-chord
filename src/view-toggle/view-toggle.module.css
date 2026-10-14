@@ -1,0 +1,30 @@
+.toggle {
+  grid-area: toggle;
+  display: inline-flex;
+  justify-self: start;
+  margin-bottom: 1rem;
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.option {
+  border-radius: 0;
+  color: var(--blue);
+  font-family: var(--header-font);
+  background-color: white;
+}
+
+.option:hover:not(.selected) {
+  background-color: rgba(48, 53, 149, 0.08);
+}
+
+.selected {
+  background-color: var(--yellow);
+}
+
+@media (max-width: 500px) {
+  .toggle {
+    justify-self: center;
+  }
+}

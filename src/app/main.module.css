@@ -27,7 +27,9 @@
   width: 80%;
   margin: 0 auto;
   display: grid;
-  grid-template-areas: 'scale synth';
+  grid-template-areas:
+    '. toggle'
+    'scale synth';
   grid-template-columns: 10% 1fr;
   grid-gap: 0.5rem;
 }

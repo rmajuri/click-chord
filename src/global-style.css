@@ -86,3 +86,8 @@ body {
     width: 3rem;
   }
 }
+
+.bassBoxOutOfKey:not(.synthBoxPlaying) {
+  background-color: white;
+  color: var(--blue);
+}

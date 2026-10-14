@@ -6,6 +6,14 @@ import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 import ProgressionRecorder from '../progression-recorder/progression-recorder'
+import ViewToggle from '../view-toggle/view-toggle'
+import BassBoxContainer from '../bass-box-container/bass-box-container'
+import {
+  buildBass,
+  bassNotesForKey,
+  startBassNote,
+  stopBassNote
+} from '../bass/bass'
 import {
   quantizeRecording,
   MIN_OCTAVE,
@@ -18,6 +26,7 @@ const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
 const transport = Tone.getTransport()
 
 buildChords('square')
+buildBass('square')
 transport.bpm.value = 95
 
 // The drum sequencer and the progression loop share the transport, so each
@@ -104,6 +113,8 @@ const App = () => {
   const [currentSynthTexture, setCurrentSynthTexture] = useState('square')
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
+  const [view, setView] = useState('chords')
+  const [currentBassNote, setCurrentBassNote] = useState('')
   const [bpm, setBpm] = useState(95)
   const [recorderState, setRecorderState] = useState('idle')
   const [recording, setRecording] = useState(null)
@@ -218,8 +229,13 @@ const App = () => {
   }
 
   const changeTexture = (synthTexture) => {
-    if (!currentChord && currentSynthTexture !== synthTexture) {
+    if (
+      !currentChord &&
+      !currentBassNote &&
+      currentSynthTexture !== synthTexture
+    ) {
       buildChords(synthTexture)
+      buildBass(synthTexture)
       setCurrentSynthTexture(synthTexture)
 
       return () => stopDrumSequencer()
@@ -255,6 +271,46 @@ const App = () => {
       const newChord = document.getElementById(chord)
       newChord.classList.add('synthBoxPlaying')
     }
+  }
+
+  const handleBassBoxClick = async (note) => {
+    await Tone.start()
+
+    if (currentBassNote === note) {
+      stopBassNote()
+      setCurrentBassNote('')
+    } else {
+      // The bass is monophonic, so a new note glides straight on from the last
+      startBassNote(note)
+      setCurrentBassNote(note)
+    }
+  }
+
+  const stopBass = () => {
+    if (currentBassNote) {
+      stopBassNote()
+      setCurrentBassNote('')
+    }
+  }
+
+  const stopChord = () => {
+    if (currentChord) {
+      majorScaleChords[currentKey][currentChord].stop()
+      document.getElementById(currentChord).classList.remove('synthBoxPlaying')
+      setCurrentChord('')
+      captureChordChange(null)
+    }
+  }
+
+  // Whatever's sounding in the view being hidden stops, since its box won't
+  // be on screen to stop it
+  const changeView = (nextView) => {
+    if (nextView === view) {
+      return
+    }
+    stopChord()
+    stopBass()
+    setView(nextView)
   }
 
   const startDrumSequencer = async (count) => {
@@ -306,6 +362,7 @@ const App = () => {
       setCurrentChord('')
       captureChordChange(null)
     }
+    stopBass()
     const currentKeyIndex = keyOptions.indexOf(currentKey)
     if (direction === 'up') {
       if (currentKeyIndex + 1 === keyOptions.length) {
@@ -360,10 +417,20 @@ const App = () => {
           currentKey={currentKey}
         />
 
-        <SynthBoxContainer
-          synthChords={synthChords}
-          handleSynthBoxClick={handleSynthBoxClick}
-        />
+        <ViewToggle view={view} onViewChange={changeView} />
+
+        {view === 'chords' ? (
+          <SynthBoxContainer
+            synthChords={synthChords}
+            handleSynthBoxClick={handleSynthBoxClick}
+          />
+        ) : (
+          <BassBoxContainer
+            bassNotes={bassNotesForKey(currentKey)}
+            currentBassNote={currentBassNote}
+            handleBassBoxClick={handleBassBoxClick}
+          />
+        )}
       </div>
       <footer style={{ textAlign: 'center' }}>
         <p style={{ fontFamily: 'var(--secondary-font)' }}>
