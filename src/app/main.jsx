@@ -32,11 +32,8 @@ const transport = Tone.getTransport()
 const samplePlayer = new Tone.Player().toDestination()
 
 buildChords('square')
-
-const DEFAULT_MONO_TEXTURES = { bass: 'round', melody: 'lead' }
-Object.entries(DEFAULT_MONO_TEXTURES).forEach(([track, texture]) =>
-  MONO_INSTRUMENTS[track].build(texture)
-)
+MONO_INSTRUMENTS.bass.build('round')
+MONO_INSTRUMENTS.melody.build('lead')
 
 transport.bpm.value = 95
 
@@ -184,8 +181,18 @@ const App = () => {
   const [view, setView] = useState('chords')
   // The note held on each single-note instrument
   const [currentNotes, setCurrentNotes] = useState(NO_NOTES)
-  const [monoTextures, setMonoTextures] = useState(DEFAULT_MONO_TEXTURES)
-  const [bpm, setBpm] = useState(95)
+  // The instruments outlive this page, so pick up their sounds on return
+  // visits
+  const [monoTextures, setMonoTextures] = useState(() =>
+    Object.fromEntries(
+      Object.entries(MONO_INSTRUMENTS).map(([track, { texture }]) => [
+        track,
+        texture
+      ])
+    )
+  )
+  // The transport outlives this page, so pick up its tempo on return visits
+  const [bpm, setBpm] = useState(() => Math.round(transport.bpm.value))
   const [recorderState, setRecorderState] = useState('idle')
   const [recordings, setRecordings] = useState(NO_RECORDINGS)
   const [grid, setGrid] = useState(1)
@@ -204,6 +211,7 @@ const App = () => {
   const micTimeoutRef = useRef(null)
   const stopSampleRecordingRef = useRef(null)
   const octavesRef = useRef(octaves)
+  const heldChordRef = useRef(null)
 
   const progressions = useMemo(
     () =>
@@ -217,8 +225,18 @@ const App = () => {
   )
   const hasProgression = TRACKS.some((track) => progressions[track])
 
+  useEffect(() => {
+    heldChordRef.current = currentChord
+      ? majorScaleChords[currentKey][currentChord]
+      : null
+  })
+
+  // Leaving for another page shouldn't leave a chord or note ringing
   useEffect(
     () => () => {
+      heldChordRef.current?.stop()
+      Object.values(MONO_INSTRUMENTS).forEach((instrument) => instrument.stop())
+      drumRepeatId = null
       transport.stop()
       transport.cancel()
       clearTimeout(micTimeoutRef.current)
@@ -617,6 +635,9 @@ const App = () => {
       <div className={styles.headerContainer}>
         <h1 className={styles.appHeader}>CLICK-CHORD</h1>
       </div>
+      <p className={styles.drawsoundLink}>
+        <a href='#/drawsound'>New: turn a drawing into music with Drawsound</a>
+      </p>
 
       <RhythmGrid
         handleTextureClick={changeTexture}

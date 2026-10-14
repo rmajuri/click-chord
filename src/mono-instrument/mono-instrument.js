@@ -44,6 +44,8 @@ export function createMonoInstrument({
 
   return {
     textures,
+    // The texture last built
+    texture: null,
 
     // Every note from the tonic up to the tonic an octave higher, so
     // chromatic passing tones are there alongside the scale
@@ -68,6 +70,7 @@ export function createMonoInstrument({
 
     build(texture) {
       const { synth = Tone.MonoSynth, options, volume } = textures[texture]
+      this.texture = texture
       ;['live', 'loop'].forEach((voice) => {
         voices[voice]?.dispose()
         voices[voice] = new synth(options).toDestination()
