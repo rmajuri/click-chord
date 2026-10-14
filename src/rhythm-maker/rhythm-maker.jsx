@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KickIcon, HatIcon, SnareIcon } from '../icons/icons'
+import { KickIcon, HatIcon, SnareIcon, MicIcon } from '../icons/icons'
 import styles from './rhythm-maker.module.css'
 
 const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
@@ -92,6 +92,23 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
     )
   })
 
+  const samples = drumSteps.map((step, i) => {
+    return (
+      <div
+        className='iconParent'
+        key={`sampleParent${i}`}
+        id={`sampleParent${i}`}
+        onClick={() => toggleCheckedColor(`sampleParent${i}`)}
+      >
+        <MicIcon
+          key={`sample${i}`}
+          id={`sample${i}`}
+          className={styles.drumCheckbox}
+        />
+      </div>
+    )
+  })
+
   const sequencerLabel = !isSequencerOn ? 'Off' : 'On'
 
   return (
@@ -163,6 +180,11 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
         <div className={styles.drumContainer}>
           <p className={styles.drumTitle}>Snare</p>
           <div className={styles.drums}>{snares}</div>
+        </div>
+
+        <div className={styles.drumContainer}>
+          <p className={styles.drumTitle}>Sample</p>
+          <div className={styles.drums}>{samples}</div>
         </div>
       </div>
     </div>

@@ -6,6 +6,12 @@ import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
 import RhythmGrid from '../rhythm-grid/rhythm-grid'
 import ProgressionRecorder from '../progression-recorder/progression-recorder'
+import Sampler from '../sampler/sampler'
+import {
+  isMicSupported,
+  startMicCapture,
+  MAX_SAMPLE_SECONDS
+} from '../sampler/mic-capture'
 import {
   quantizeRecording,
   MIN_OCTAVE,
@@ -16,6 +22,8 @@ const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
 const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
 const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
 const transport = Tone.getTransport()
+// Shared by the Play button and the drum sequencer's Sample row
+const samplePlayer = new Tone.Player().toDestination()
 
 buildChords('square')
 transport.bpm.value = 95
@@ -111,7 +119,13 @@ const App = () => {
   const [isLooping, setIsLooping] = useState(false)
   const [playingStep, setPlayingStep] = useState(-1)
   const [octaves, setOctaves] = useState({})
+  const [samplerState, setSamplerState] = useState(() =>
+    isMicSupported() ? 'idle' : 'unsupported'
+  )
+  const [sampleLength, setSampleLength] = useState(0)
   const recordingRef = useRef(null)
+  const stopMicRef = useRef(null)
+  const micTimeoutRef = useRef(null)
   const octavesRef = useRef(octaves)
 
   const progression = useMemo(
@@ -123,6 +137,8 @@ const App = () => {
     () => () => {
       transport.stop()
       transport.cancel()
+      clearTimeout(micTimeoutRef.current)
+      stopMicRef.current?.()
     },
     []
   )
@@ -212,6 +228,53 @@ const App = () => {
     updateOctaves({ ...octaves, [eventIndex]: octave })
   }
 
+  const stopSampleRecording = async () => {
+    const stopMic = stopMicRef.current
+    if (!stopMic) {
+      return
+    }
+    stopMicRef.current = null
+    clearTimeout(micTimeoutRef.current)
+    setSamplerState('processing')
+    try {
+      const buffer = await stopMic()
+      samplePlayer.buffer = buffer
+      setSampleLength(buffer.duration)
+      setSamplerState('idle')
+    } catch {
+      setSamplerState('error')
+    }
+  }
+
+  const startSampleRecording = async () => {
+    await Tone.start()
+    setSamplerState('requesting')
+    try {
+      stopMicRef.current = await startMicCapture()
+    } catch (err) {
+      setSamplerState(err.name === 'NotAllowedError' ? 'denied' : 'error')
+      return
+    }
+    setSamplerState('recording')
+    micTimeoutRef.current = setTimeout(
+      stopSampleRecording,
+      MAX_SAMPLE_SECONDS * 1000
+    )
+  }
+
+  const playSample = async () => {
+    await Tone.start()
+    if (samplePlayer.loaded) {
+      samplePlayer.start()
+    }
+  }
+
+  const clearSample = () => {
+    samplePlayer.stop()
+    samplePlayer.buffer = new Tone.ToneAudioBuffer()
+    setSampleLength(0)
+  }
+
   const changeBpm = (bpmValue) => {
     transport.bpm.value = Number(bpmValue)
     setBpm(bpmValue)
@@ -279,6 +342,9 @@ const App = () => {
       const hatClasses = [
         ...document.getElementById(`hatParent${step}`).classList
       ]
+      const sampleClasses = [
+        ...document.getElementById(`sampleParent${step}`).classList
+      ]
 
       if (kickClasses.includes('iconParentPlaying')) {
         kick.start()
@@ -288,6 +354,9 @@ const App = () => {
       }
       if (hatClasses.includes('iconParentPlaying')) {
         hat.start()
+      }
+      if (sampleClasses.includes('iconParentPlaying') && samplePlayer.loaded) {
+        samplePlayer.start(time)
       }
     }
 
@@ -337,6 +406,16 @@ const App = () => {
         stopSequencer={stopDrumSequencer}
         changeBpm={changeBpm}
         bpm={bpm}
+      />
+
+      <Sampler
+        samplerState={samplerState}
+        hasSample={sampleLength > 0}
+        sampleLength={sampleLength}
+        onRecord={startSampleRecording}
+        onStopRecording={stopSampleRecording}
+        onPlay={playSample}
+        onClear={clearSample}
       />
 
       <ProgressionRecorder
