@@ -12,14 +12,14 @@ import {
   buildBass,
   BASS_TEXTURES,
   bassNotesForKey,
+  transposeNote,
   startBassNote,
   stopBassNote
 } from '../bass/bass'
 import {
   quantizeRecording,
   BEATS_PER_BAR,
-  MIN_OCTAVE,
-  MAX_OCTAVE
+  octaveRange
 } from '../progression-recorder/quantize'
 
 const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
@@ -56,7 +56,7 @@ const stopDrumSequencer = () => {
 // Starts a step's chord or bass note and returns a function that stops it
 const soundStep = (track, step, octave, time) => {
   if (track === 'bass') {
-    startBassNote(step.name, time, 'loop')
+    startBassNote(transposeNote(step.name, octave), time, 'loop')
     return (stopTime) => stopBassNote(stopTime, 'loop')
   }
   const chord = majorScaleChords[step.key][step.name]
@@ -132,6 +132,7 @@ const startLoop = (progressions, { getOctave, isMuted, onStep }) => {
 }
 
 const NO_STEPS_PLAYING = { chords: -1, bass: -1 }
+const NO_OCTAVES = { chords: {}, bass: {} }
 
 const App = () => {
   const [keyOptions] = useState([
@@ -160,7 +161,7 @@ const App = () => {
   const [grid, setGrid] = useState(1)
   const [isLooping, setIsLooping] = useState(false)
   const [playingSteps, setPlayingSteps] = useState(NO_STEPS_PLAYING)
-  const [octaves, setOctaves] = useState({})
+  const [octaves, setOctaves] = useState(NO_OCTAVES)
   const recordingRef = useRef(null)
   const octavesRef = useRef(octaves)
 
@@ -192,7 +193,7 @@ const App = () => {
     }
     const stopLoop = startLoop(progressions, {
       getOctave: (track, eventIndex) =>
-        track === 'chords' ? (octavesRef.current[eventIndex] ?? 0) : 0,
+        octavesRef.current[track][eventIndex] ?? 0,
       // The track being recorded sits out so the old take doesn't play over
       // the new one
       isMuted: (track) => recordingRef.current?.track === track,
@@ -263,9 +264,7 @@ const App = () => {
     recordingRef.current = null
     setRecorderState('idle')
     if (rec && rec.startTime !== null && rec.events.length) {
-      if (rec.track === 'chords') {
-        updateOctaves({})
-      }
+      updateOctaves(rec.track, {})
       setRecordings((prev) => ({
         ...prev,
         [rec.track]: {
@@ -291,7 +290,8 @@ const App = () => {
   const clearRecording = () => {
     setIsLooping(false)
     setRecordings({ chords: null, bass: null })
-    updateOctaves({})
+    octavesRef.current = NO_OCTAVES
+    setOctaves(NO_OCTAVES)
   }
 
   const clearTrack = (track) => {
@@ -300,22 +300,23 @@ const App = () => {
       setIsLooping(false)
     }
     setRecordings((prev) => ({ ...prev, [track]: null }))
-    if (track === 'chords') {
-      updateOctaves({})
-    }
+    updateOctaves(track, {})
   }
 
-  function updateOctaves(next) {
+  function updateOctaves(track, trackOctaves) {
+    const next = { ...octavesRef.current, [track]: trackOctaves }
     octavesRef.current = next
     setOctaves(next)
   }
 
-  const changeStepOctave = (eventIndex, direction) => {
+  const changeStepOctave = (track, step, direction) => {
+    const trackOctaves = octaves[track]
+    const { min, max } = octaveRange(track, step.name)
     const octave = Math.min(
-      MAX_OCTAVE,
-      Math.max(MIN_OCTAVE, (octaves[eventIndex] ?? 0) + direction)
+      max,
+      Math.max(min, (trackOctaves[step.eventIndex] ?? 0) + direction)
     )
-    updateOctaves({ ...octaves, [eventIndex]: octave })
+    updateOctaves(track, { ...trackOctaves, [step.eventIndex]: octave })
   }
 
   const changeBpm = (bpmValue) => {

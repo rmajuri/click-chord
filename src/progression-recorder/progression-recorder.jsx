@@ -1,9 +1,5 @@
-import {
-  QUANTIZE_GRIDS,
-  BEATS_PER_BAR,
-  MIN_OCTAVE,
-  MAX_OCTAVE
-} from './quantize'
+import { QUANTIZE_GRIDS, BEATS_PER_BAR, octaveRange } from './quantize'
+import { transposeNote } from '../bass/bass'
 import { ArrowUpIcon, ArrowDownIcon } from '../icons/icons'
 import styles from './progression-recorder.module.css'
 
@@ -44,8 +40,13 @@ const ProgressionRecorder = ({
 
   const renderSteps = (track, progression) =>
     progression.steps.map((step, i) => {
-      const octave = octaves[step.eventIndex] ?? 0
-      const showOctave = track === 'chords' && step.name
+      const octave = octaves[track][step.eventIndex] ?? 0
+      const range = step.name && octaveRange(track, step.name)
+      // Bass notes are named with their octave, so the name follows the shift
+      const name =
+        track === 'bass' && step.name
+          ? transposeNote(step.name, octave)
+          : step.name
 
       return (
         <div
@@ -55,15 +56,15 @@ const ProgressionRecorder = ({
           }`}
           style={{ flexGrow: step.duration }}
         >
-          <span className={styles.stepName}>{step.name ?? 'Rest'}</span>
-          {showOctave && (
+          <span className={styles.stepName}>{name ?? 'Rest'}</span>
+          {step.name && (
             <span className={styles.octaveControls}>
               <button
                 type='button'
                 className={styles.octaveButton}
-                aria-label={`Lower ${step.name} an octave`}
-                disabled={octave <= MIN_OCTAVE}
-                onClick={() => onOctaveChange(step.eventIndex, -1)}
+                aria-label={`Lower ${name} an octave`}
+                disabled={octave <= range.min}
+                onClick={() => onOctaveChange(track, step, -1)}
               >
                 <ArrowDownIcon />
               </button>
@@ -73,9 +74,9 @@ const ProgressionRecorder = ({
               <button
                 type='button'
                 className={styles.octaveButton}
-                aria-label={`Raise ${step.name} an octave`}
-                disabled={octave >= MAX_OCTAVE}
-                onClick={() => onOctaveChange(step.eventIndex, 1)}
+                aria-label={`Raise ${name} an octave`}
+                disabled={octave >= range.max}
+                onClick={() => onOctaveChange(track, step, 1)}
               >
                 <ArrowUpIcon />
               </button>

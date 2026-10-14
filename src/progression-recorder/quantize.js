@@ -1,7 +1,15 @@
+import { bassOctaveRange } from '../bass/bass'
+
 export const BEATS_PER_BAR = 4
 
-export const MIN_OCTAVE = -2
-export const MAX_OCTAVE = 2
+const MIN_OCTAVE = -2
+const MAX_OCTAVE = 2
+
+// How far a step can be shifted by octaves
+export const octaveRange = (track, name) =>
+  track === 'bass'
+    ? bassOctaveRange(name, MAX_OCTAVE)
+    : { min: MIN_OCTAVE, max: MAX_OCTAVE }
 
 // Grid sizes in beats (quarter notes)
 export const QUANTIZE_GRIDS = [

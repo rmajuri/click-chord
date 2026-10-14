@@ -23,6 +23,21 @@ const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11]
 const midiToNote = (midi) =>
   `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`
 
+const noteToMidi = (note) => {
+  const [, name, octave] = note.match(/^([A-G]b?)(-?\d+)$/)
+  return NOTE_NAMES.indexOf(name) + (Number(octave) + 1) * 12
+}
+
+export const transposeNote = (note, octaves) =>
+  midiToNote(noteToMidi(note) + octaves * 12)
+
+// Octave shifts that keep a note at E1 or above, since anything lower is
+// too low for most speakers to play
+export const bassOctaveRange = (note, maxOctave) => ({
+  min: -Math.floor((noteToMidi(note) - LOWEST_TONIC_MIDI) / 12),
+  max: maxOctave
+})
+
 // Every note from the tonic up to the tonic an octave higher, so chromatic
 // passing tones are there alongside the scale
 export function bassNotesForKey(key) {
