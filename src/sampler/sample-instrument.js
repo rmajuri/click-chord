@@ -1,4 +1,5 @@
 import * as Tone from 'tone'
+import { findLoopPoints } from './find-loop'
 
 // Pitch the sample is treated as when it has no clear pitch of its own
 export const FALLBACK_FREQUENCY = Tone.Frequency('C4').toFrequency()
@@ -23,9 +24,12 @@ const peakOf = (buffer) => {
 // Plays chords by repitching a recorded sample, with the same
 // triggerAttack/triggerRelease shape as the PolySynth it stands in for
 export class SampleInstrument {
-  constructor({ buffer, frequency }) {
+  constructor({ buffer, frequency, sustain = false }) {
     this.buffer = buffer
     this.frequency = frequency ?? FALLBACK_FREQUENCY
+    // When on, notes loop until released instead of ending with the sample
+    this.sustain = sustain
+    this.loopPoints = findLoopPoints(buffer, frequency)
     // Shift chords by whole octaves toward the sample's own register so it
     // isn't slowed or sped up into mush
     this.transpose =
@@ -48,6 +52,8 @@ export class SampleInstrument {
         playbackRate: target.toFrequency() / this.frequency,
         fadeIn: 0.005,
         fadeOut: 0.08,
+        loop: this.sustain,
+        ...this.loopPoints,
         onended: () => {
           const sources = this.active.get(note)?.filter((s) => s !== source)
           if (sources?.length) {

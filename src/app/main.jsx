@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import * as Tone from 'tone'
-import { majorScaleChords, buildChords } from '../chords/chords'
+import {
+  majorScaleChords,
+  buildChords,
+  setSampleSustain
+} from '../chords/chords'
 import styles from './main.module.css'
 import SynthBoxContainer from '../synth-box-container/synth-box-container'
 import KeyChanger from '../key-changer/key-changer'
@@ -124,6 +128,7 @@ const App = () => {
   )
   const [sampleLength, setSampleLength] = useState(0)
   const [sampleNote, setSampleNote] = useState(null)
+  const [sampleSustain, setSampleSustainState] = useState(true)
   const sampleRef = useRef(null)
   const recordingRef = useRef(null)
   const stopMicRef = useRef(null)
@@ -250,7 +255,7 @@ const App = () => {
       setSamplerState('idle')
       if (currentSynthTexture === 'sample') {
         stopCurrentChord()
-        buildChords('sample', sample)
+        buildChords('sample', { ...sample, sustain: sampleSustain })
       }
     } catch {
       setSamplerState('error')
@@ -310,6 +315,11 @@ const App = () => {
     }
   }
 
+  const changeSampleSustain = (sustain) => {
+    setSampleSustain(sustain)
+    setSampleSustainState(sustain)
+  }
+
   const changeBpm = (bpmValue) => {
     transport.bpm.value = Number(bpmValue)
     setBpm(bpmValue)
@@ -320,7 +330,10 @@ const App = () => {
       return
     }
     if (!currentChord && currentSynthTexture !== synthTexture) {
-      buildChords(synthTexture, sampleRef.current)
+      buildChords(synthTexture, {
+        ...sampleRef.current,
+        sustain: sampleSustain
+      })
       setCurrentSynthTexture(synthTexture)
 
       return () => stopDrumSequencer()
@@ -452,6 +465,8 @@ const App = () => {
         hasSample={sampleLength > 0}
         sampleLength={sampleLength}
         sampleNote={sampleNote}
+        sustain={sampleSustain}
+        onSustainChange={changeSampleSustain}
         onRecord={startSampleRecording}
         onStopRecording={stopSampleRecording}
         onPlay={playSample}

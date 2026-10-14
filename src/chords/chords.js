@@ -87,8 +87,16 @@ const invert = (intervals, inversion) => [
   ...intervals.slice(0, inversion).map((interval) => interval + 12)
 ]
 
+// Applies to chords started after the change, so a held chord keeps playing
+// the way it started
+export function setSampleSustain(sustain) {
+  if (synth instanceof SampleInstrument) {
+    synth.sustain = sustain
+  }
+}
+
 // The 'sample' texture plays chords by repitching a mic recording, passed as
-// { buffer, frequency }
+// { buffer, frequency, sustain }
 export function buildChords(synthTexture, sample) {
   if (synth) {
     synth.dispose()

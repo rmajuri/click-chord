@@ -17,6 +17,8 @@ const Sampler = ({
   hasSample,
   sampleLength,
   sampleNote,
+  sustain,
+  onSustainChange,
   onRecord,
   onStopRecording,
   onPlay,
@@ -68,6 +70,18 @@ const Sampler = ({
         >
           Clear
         </button>
+
+        <label
+          className={styles.sustainLabel}
+          title='Loop the sample so held chords ring out until you release them'
+        >
+          <input
+            type='checkbox'
+            checked={sustain}
+            onChange={(e) => onSustainChange(e.target.checked)}
+          />
+          Sustain chords
+        </label>
       </div>
 
       <p className={styles.status}>{status}</p>

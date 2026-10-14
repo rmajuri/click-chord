@@ -62,8 +62,30 @@
   }
 }
 
+.sustainLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  color: var(--blue);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sustainLabel input {
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
 .status {
   margin: 0.4rem 0 0;
   color: var(--blue);
   font-size: 0.875rem;
+}
+
+@media (max-width: 500px) {
+  .sustainLabel {
+    margin-left: 0;
+  }
 }
