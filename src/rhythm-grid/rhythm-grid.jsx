@@ -7,6 +7,8 @@ const RhythmGrid = ({
   handleTextureClick,
   stopSequencer,
   startSequencer,
+  drumSounds,
+  onDrumSoundChange,
   changeBpm,
   bpm
 }) => {
@@ -17,6 +19,8 @@ const RhythmGrid = ({
       <RhythmMaker
         stopSequencer={stopSequencer}
         startSequencer={startSequencer}
+        drumSounds={drumSounds}
+        onDrumSoundChange={onDrumSoundChange}
         changeBpm={changeBpm}
         bpm={bpm}
       />

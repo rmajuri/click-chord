@@ -23,20 +23,13 @@
 
 .drumContainer {
   display: grid;
-  grid-template-columns: 3rem 1fr;
+  grid-template-columns: 4.5rem 1fr;
   width: 100%;
 }
 
 .drumSection {
   margin: 0 auto;
   width: 80%;
-}
-
-.drumTitle {
-  font-family: var(--secondary-font);
-  color: var(--blue);
-  padding-bottom: 5px;
-  text-transform: uppercase;
 }
 
 .drums {
@@ -51,6 +44,10 @@
 }
 
 @media (max-width: 500px) {
+  .drumContainer {
+    grid-template-columns: 3.5rem 1fr;
+  }
+
   .drumCheckbox {
     font-size: 1.5rem;
   }

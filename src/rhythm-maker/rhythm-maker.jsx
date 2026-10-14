@@ -1,8 +1,17 @@
 import { useState } from 'react'
 import { KickIcon, HatIcon, SnareIcon } from '../icons/icons'
+import DrumSoundPicker from '../drum-sound-picker/drum-sound-picker'
+import { drumSounds as drumSoundOptions } from '../drums/drum-sounds'
 import styles from './rhythm-maker.module.css'
 
-const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
+const RhythmMaker = ({
+  stopSequencer,
+  startSequencer,
+  drumSounds,
+  onDrumSoundChange,
+  changeBpm,
+  bpm
+}) => {
   const [timeCount, setTimeCount] = useState(8)
   const [isSequencerOn, setIsSequencerOn] = useState(false)
 
@@ -151,17 +160,32 @@ const RhythmMaker = ({ stopSequencer, startSequencer, changeBpm, bpm }) => {
 
       <div className={styles.drumSection}>
         <div className={styles.drumContainer}>
-          <p className={styles.drumTitle}>Kick</p>
+          <DrumSoundPicker
+            label='Kick'
+            soundNames={Object.keys(drumSoundOptions.kick)}
+            currentSound={drumSounds.kick}
+            onSelect={(soundName) => onDrumSoundChange('kick', soundName)}
+          />
           <div className={styles.drums}>{kicks}</div>
         </div>
 
         <div className={styles.drumContainer}>
-          <p className={styles.drumTitle}>Hi-Hat</p>
+          <DrumSoundPicker
+            label='Hi-Hat'
+            soundNames={Object.keys(drumSoundOptions.hat)}
+            currentSound={drumSounds.hat}
+            onSelect={(soundName) => onDrumSoundChange('hat', soundName)}
+          />
           <div className={styles.drums}>{hiHats}</div>
         </div>
 
         <div className={styles.drumContainer}>
-          <p className={styles.drumTitle}>Snare</p>
+          <DrumSoundPicker
+            label='Snare'
+            soundNames={Object.keys(drumSoundOptions.snare)}
+            currentSound={drumSounds.snare}
+            onSelect={(soundName) => onDrumSoundChange('snare', soundName)}
+          />
           <div className={styles.drums}>{snares}</div>
         </div>
       </div>

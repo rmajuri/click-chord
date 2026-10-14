@@ -11,10 +11,8 @@ import {
   MIN_OCTAVE,
   MAX_OCTAVE
 } from '../progression-recorder/quantize'
+import { drumSounds, defaultDrumSounds } from '../drums/drum-sounds'
 
-const Kick = new Tone.ToneAudioBuffer('./kick-deep.wav')
-const Hat = new Tone.ToneAudioBuffer('./hihat-808.wav')
-const Snare = new Tone.ToneAudioBuffer('./snare-analog.wav')
 const transport = Tone.getTransport()
 
 buildChords('square')
@@ -24,6 +22,19 @@ transport.bpm.value = 95
 // only stops it when the other isn't using it
 let drumRepeatId = null
 let loopPart = null
+
+// Read on every step, so a newly picked sound plays without a restart
+const drumVoices = {}
+
+const setDrumVoice = (drum, soundName) => {
+  drumVoices[drum]?.dispose()
+  drumVoices[drum] = drumSounds[drum][soundName]()
+  return drumVoices[drum]
+}
+
+Object.entries(defaultDrumSounds).forEach(([drum, soundName]) =>
+  setDrumVoice(drum, soundName)
+)
 
 const stopTransportIfIdle = () => {
   if (drumRepeatId === null && loopPart === null) {
@@ -102,6 +113,7 @@ const App = () => {
     'B'
   ])
   const [currentSynthTexture, setCurrentSynthTexture] = useState('square')
+  const [currentDrumSounds, setCurrentDrumSounds] = useState(defaultDrumSounds)
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
   const [bpm, setBpm] = useState(95)
@@ -257,11 +269,15 @@ const App = () => {
     }
   }
 
+  const changeDrumSound = async (drum, soundName) => {
+    await Tone.start()
+    // Play one hit so the user hears what they picked
+    setDrumVoice(drum, soundName).play(Tone.now())
+    setCurrentDrumSounds({ ...currentDrumSounds, [drum]: soundName })
+  }
+
   const startDrumSequencer = async (count) => {
     await Tone.start()
-    const kick = new Tone.Player(Kick).toDestination()
-    const snare = new Tone.Player(Snare).toDestination()
-    const hat = new Tone.Player(Hat).toDestination()
     const stepTicks = Tone.Time(`${count}n`).toTicks()
 
     // Step from the transport position rather than a counter so the drums
@@ -270,25 +286,15 @@ const App = () => {
       const step = count
         ? Math.round(transport.getTicksAtTime(time) / stepTicks) % count
         : 8
-      const kickClasses = [
-        ...document.getElementById(`kickParent${step}`).classList
-      ]
-      const snareClasses = [
-        ...document.getElementById(`snareParent${step}`).classList
-      ]
-      const hatClasses = [
-        ...document.getElementById(`hatParent${step}`).classList
-      ]
 
-      if (kickClasses.includes('iconParentPlaying')) {
-        kick.start()
-      }
-      if (snareClasses.includes('iconParentPlaying')) {
-        snare.start()
-      }
-      if (hatClasses.includes('iconParentPlaying')) {
-        hat.start()
-      }
+      Object.keys(drumVoices).forEach((drum) => {
+        const drumClasses = [
+          ...document.getElementById(`${drum}Parent${step}`).classList
+        ]
+        if (drumClasses.includes('iconParentPlaying')) {
+          drumVoices[drum].play(time)
+        }
+      })
     }
 
     stopDrumSequencer()
@@ -335,6 +341,8 @@ const App = () => {
         handleTextureClick={changeTexture}
         startSequencer={startDrumSequencer}
         stopSequencer={stopDrumSequencer}
+        drumSounds={currentDrumSounds}
+        onDrumSoundChange={changeDrumSound}
         changeBpm={changeBpm}
         bpm={bpm}
       />
