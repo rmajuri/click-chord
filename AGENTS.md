@@ -24,9 +24,11 @@ npm run lint       # ESLint (flat config in eslint.config.js)
 npm run format     # Prettier, writes in place
 ```
 
-There is no test suite. Before finishing a change, run `npm run lint` and
-`npm run build`, and check that Prettier leaves your files unchanged
-(`npx prettier --check <files>`). For audio or UI changes, run the dev server
+`npm test` runs Vitest unit tests and `npm run test:e2e` runs Playwright
+journey and accessibility tests (set `CHROMIUM_PATH` if Playwright's own
+browsers aren't installed). Before finishing a change, run `npm run lint`,
+the tests, and `npm run build`, and check that Prettier leaves your files
+unchanged (`npx prettier --check <files>`). For audio or UI changes, run the dev server
 and exercise the feature in a browser.
 
 ## Layout
@@ -34,7 +36,8 @@ and exercise the feature in a browser.
 ```
 index.html              Vite entry HTML (metadata, font, manifest)
 public/                 Static assets: drum samples (.wav), icons, manifest
-src/main.jsx            Mounts <App />
+src/main.jsx            Mounts the app; hash routes pick Click-Chord or
+                        Drawsound (#/drawsound)
 src/global-style.css    Global styles
 src/app/main.jsx        App component: all top-level state, the Tone
                         transport, drum sequencer, loop playback, recording
@@ -45,6 +48,10 @@ src/drums/drum-sounds.js  Drum voice factories (samples and synthesized)
 src/progression-recorder/quantize.js  Snaps recorded takes to a grid
 src/sampler/            Mic capture, pitch detection, loop-point finding,
                         and SampleInstrument (plays chords from a sample)
+src/drawsound/          Drawsound page: drawing analysis, composition,
+                        mappings (creative rules), Tone playback and WAV
+                        export, its components, and *.test.js unit tests
+e2e/                    Playwright tests
 src/<component>/        One folder per UI component:
                         <name>.jsx + <name>.module.css
 ```
@@ -60,7 +67,7 @@ src/<component>/        One folder per UI component:
   library; MUI was removed to keep the bundle small, so do not add one.
 - File and folder names are kebab-case. Each component lives in its own
   folder named after it.
-- Comments are short and explain *why*, not what. Match the existing
+- Comments are short and explain _why_, not what. Match the existing
   density; most functions have none or one line.
 - Prefer deriving musical data from theory (intervals, MIDI numbers) over
   hard-coded note tables, as `chords.js` and `bass.js` do.

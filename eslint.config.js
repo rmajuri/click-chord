@@ -16,5 +16,9 @@ export default [
       parserOptions: { ecmaFeatures: { jsx: true } }
     }
   },
+  {
+    files: ['e2e/**/*.js', '*.config.js'],
+    languageOptions: { globals: globals.node }
+  },
   prettier
 ]
