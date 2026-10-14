@@ -38,7 +38,9 @@
   width: 80%;
   margin: 0 auto;
   display: grid;
-  grid-template-areas: 'scale synth';
+  grid-template-areas:
+    '. toggle'
+    'scale synth';
   grid-template-columns: 10% 1fr;
   grid-gap: 0.5rem;
 }
@@ -46,5 +48,20 @@
 @media (max-width: 500px) {
   .appHeader {
     font-size: calc(2.5rem + 2vmin);
+  }
+}
+
+.viewControls {
+  grid-area: toggle;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 500px) {
+  .viewControls {
+    justify-content: center;
   }
 }

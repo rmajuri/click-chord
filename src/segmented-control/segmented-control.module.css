@@ -1,0 +1,22 @@
+.control {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.option {
+  border-radius: 0;
+  color: var(--blue);
+  font-family: var(--header-font);
+  background-color: white;
+}
+
+.option:hover:not(.selected) {
+  background-color: rgba(48, 53, 149, 0.08);
+}
+
+.selected {
+  background-color: var(--yellow);
+}
