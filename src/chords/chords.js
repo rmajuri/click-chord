@@ -4,7 +4,20 @@ let synth
 
 export const majorScaleChords = {}
 
-const NOTE_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+const NOTE_NAMES = [
+  'C',
+  'Db',
+  'D',
+  'Eb',
+  'E',
+  'F',
+  'Gb',
+  'G',
+  'Ab',
+  'A',
+  'Bb',
+  'B'
+]
 
 // Roots are voiced between A2 and Ab3 so every key sits in the same register
 const LOWEST_ROOT_MIDI = 45
@@ -74,7 +87,7 @@ export function buildChords(synthTexture) {
       type: synthTexture
     }
   }).toDestination()
-  synth.maxPolyphony = 6
+  synth.maxPolyphony = 64
   synth.volume.value = volume
 
   class chordObj {
@@ -102,9 +115,8 @@ export function buildChords(synthTexture) {
         const notes = CHORD_TYPES[type].map((interval) =>
           midiToNote(root + interval)
         )
-        majorScaleChords[key][`${NOTE_NAMES[pitchClass]}${type}`] = new chordObj(
-          notes
-        )
+        majorScaleChords[key][`${NOTE_NAMES[pitchClass]}${type}`] =
+          new chordObj(notes)
       })
     })
   })
