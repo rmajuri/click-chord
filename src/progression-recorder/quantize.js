@@ -11,35 +11,37 @@ export const QUANTIZE_GRIDS = [
   { label: '1/8', beats: 0.5 }
 ]
 
-// Turns a raw recording ({ events, duration, bpm }, times in seconds from the
-// first chord) into steps snapped to the grid, plus a loop length in whole bars.
-// A step with a null chord is a rest. Each step keeps the index of the event
-// it came from, which stays stable across re-quantizing.
+// Turns a raw recording ({ events, duration, bpm, loopUnit }, times in seconds
+// from the start of the take) into steps snapped to the grid, plus a loop
+// length in whole multiples of loopUnit beats (a bar unless the take was
+// recorded over a loop). Each event's name is a chord or a bass note, and a
+// step with a null name is a rest. Each step keeps the index of the event it
+// came from, which stays stable across re-quantizing.
 export function quantizeRecording(recording, gridBeats) {
   if (!recording || !recording.events.length) {
     return null
   }
 
-  const { events, duration, bpm } = recording
+  const { events, duration, bpm, loopUnit = BEATS_PER_BAR } = recording
   const toBeats = (seconds) => (seconds * bpm) / 60
   const snap = (beats) => Math.round(beats / gridBeats) * gridBeats
 
   // When several changes land on the same grid slot, the last one wins
   const slots = new Map()
-  events.forEach(({ time, chord, key }, eventIndex) => {
-    slots.set(snap(toBeats(time)), { chord, key, eventIndex })
+  events.forEach(({ time, name, key }, eventIndex) => {
+    slots.set(snap(toBeats(time)), { name, key, eventIndex })
   })
 
   const steps = []
   ;[...slots.entries()]
     .sort(([a], [b]) => a - b)
-    .forEach(([beat, { chord, key, eventIndex }]) => {
+    .forEach(([beat, { name, key, eventIndex }]) => {
       const prev = steps.at(-1)
       const unchanged = prev
-        ? prev.chord === chord && prev.key === key
-        : chord === null
+        ? prev.name === name && prev.key === key
+        : name === null
       if (!unchanged) {
-        steps.push({ beat, chord, key, eventIndex })
+        steps.push({ beat, name, key, eventIndex })
       }
     })
 
@@ -47,14 +49,20 @@ export function quantizeRecording(recording, gridBeats) {
     return null
   }
 
+  // A take recorded over a loop can come in partway through it, so it starts
+  // with a rest to stop the last note ringing on into the next time around
+  if (steps[0].beat > 0) {
+    steps.unshift({ beat: 0, name: null, key: null, eventIndex: -1 })
+  }
+
   // The loop has to cover the last step, and otherwise follows where the
-  // user pressed stop, rounded to the nearest bar
+  // user pressed stop, rounded to the nearest loop unit
   const last = steps.at(-1)
-  const minEnd = last.beat + (last.chord ? gridBeats : 0)
+  const minEnd = last.beat + (last.name ? gridBeats : 0)
   const loopBeats = Math.max(
-    BEATS_PER_BAR,
-    Math.ceil(minEnd / BEATS_PER_BAR) * BEATS_PER_BAR,
-    Math.round(toBeats(duration) / BEATS_PER_BAR) * BEATS_PER_BAR
+    loopUnit,
+    Math.ceil(minEnd / loopUnit) * loopUnit,
+    Math.round(toBeats(duration) / loopUnit) * loopUnit
   )
 
   return {

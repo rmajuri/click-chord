@@ -1,7 +1,5 @@
 import * as Tone from 'tone'
 
-let synth
-
 const NOTE_NAMES = [
   'C',
   'Db',
@@ -129,15 +127,21 @@ export const BASS_TEXTURES = {
   }
 }
 
+// Live playing and the loop get separate synths so playing along with a
+// looped bass line doesn't cut it off
+const voices = {}
+
 export function buildBass(texture) {
-  if (synth) {
-    synth.dispose()
-  }
   const { options, volume } = BASS_TEXTURES[texture]
-  synth = new Tone.MonoSynth(options).toDestination()
-  synth.volume.value = volume
+  ;['live', 'loop'].forEach((voice) => {
+    voices[voice]?.dispose()
+    voices[voice] = new Tone.MonoSynth(options).toDestination()
+    voices[voice].volume.value = volume
+  })
 }
 
-export const startBassNote = (note) => synth.triggerAttack(note, '+0.01', 0.8)
+export const startBassNote = (note, time = '+0.01', voice = 'live') =>
+  voices[voice].triggerAttack(note, time, 0.8)
 
-export const stopBassNote = () => synth.triggerRelease('+0.01')
+export const stopBassNote = (time = '+0.01', voice = 'live') =>
+  voices[voice].triggerRelease(time)

@@ -58,6 +58,10 @@
   text-transform: uppercase;
 }
 
+.gridSelect:disabled {
+  opacity: 0.4;
+}
+
 .gridSelect {
   border: 1px solid var(--blue);
   border-radius: 4px;
@@ -153,15 +157,65 @@
   color: white;
 }
 
-.loopLength {
-  margin: 0.4rem 0 0;
-  font-size: 0.75rem;
+.track {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.trackLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0.5rem;
   color: var(--blue);
+  font-size: 0.75rem;
   text-transform: uppercase;
+}
+
+.trackName {
+  font-family: var(--header-font);
+  font-size: 0.875rem;
+}
+
+.trackMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.clearTrackButton {
+  padding: 0 0.2rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.clearTrackButton:hover:not(:disabled) {
+  color: var(--red);
+}
+
+.clearTrackButton:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 @media (max-width: 500px) {
   .gridLabel {
     margin-left: 0;
+  }
+
+  .track {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .trackLabel {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
