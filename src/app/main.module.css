@@ -17,6 +17,17 @@
   animation: fadeIn 3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.drawsoundLink {
+  margin: 0.75rem auto 0;
+  text-align: center;
+  font-family: var(--secondary-font);
+}
+
+.drawsoundLink a {
+  color: var(--blue);
+  font-weight: bold;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

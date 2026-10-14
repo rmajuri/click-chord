@@ -128,7 +128,8 @@ const App = () => {
   const [currentDrumSounds, setCurrentDrumSounds] = useState(defaultDrumSounds)
   const [currentKey, setCurrentKey] = useState('C')
   const [currentChord, setCurrentChord] = useState('')
-  const [bpm, setBpm] = useState(95)
+  // The transport outlives this page, so pick up its tempo on return visits
+  const [bpm, setBpm] = useState(() => Math.round(transport.bpm.value))
   const [recorderState, setRecorderState] = useState('idle')
   const [recording, setRecording] = useState(null)
   const [grid, setGrid] = useState(1)
@@ -147,14 +148,24 @@ const App = () => {
   const micTimeoutRef = useRef(null)
   const stopSampleRecordingRef = useRef(null)
   const octavesRef = useRef(octaves)
+  const heldChordRef = useRef(null)
 
   const progression = useMemo(
     () => quantizeRecording(recording, grid),
     [recording, grid]
   )
 
+  useEffect(() => {
+    heldChordRef.current = currentChord
+      ? majorScaleChords[currentKey][currentChord]
+      : null
+  })
+
+  // Leaving for another page shouldn't leave a chord ringing
   useEffect(
     () => () => {
+      heldChordRef.current?.stop()
+      drumRepeatId = null
       transport.stop()
       transport.cancel()
       clearTimeout(micTimeoutRef.current)
@@ -456,6 +467,9 @@ const App = () => {
       <div className={styles.headerContainer}>
         <h1 className={styles.appHeader}>CLICK-CHORD</h1>
       </div>
+      <p className={styles.drawsoundLink}>
+        <a href='#/drawsound'>New: turn a drawing into music with Drawsound</a>
+      </p>
 
       <RhythmGrid
         handleTextureClick={changeTexture}
